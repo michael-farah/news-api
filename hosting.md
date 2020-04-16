@@ -73,7 +73,7 @@ At the top of your `knexfile.js`, add the following line of code:
 const { DB_URL } = process.env;
 ```
 
-Then add a `production` key to the `customConfigs` object:
+Next, add a `production` key to the `customConfigs` object in your `knexfile.js`. Add in the `DB_URL` as `connectionString` into the connection object with an additional `ssl.rejectUnauthorized` property set to false:
 
 ```js
 const { DB_URL } = process.env;
@@ -81,13 +81,18 @@ const { DB_URL } = process.env;
 const customConfigs = {
   // ...
   production: {
-    connection: `${DB_URL}?ssl=true`,
+    connection: {
+      connectionString: DB_URL,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    },
   },
 };
 // ...
 ```
 
-It is critical to add the query of `ssl=true`, otherwise this will not work!
+It is critical to set the `ssl.rejectUnauthorized` property to `false`, otherwise we will not be able to connect to the hosted database from your local machine.
 
 In your `./db/data/index.js` add a key of production with a value of your development data in your data object. Something like:
 
