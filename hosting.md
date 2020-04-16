@@ -73,40 +73,16 @@ At the top of your `knexfile.js`, add the following line of code:
 const { DB_URL } = process.env;
 ```
 
-We need to parse this `DB_URL` into its constituent parts (host, database, user etc.) so that we can add additional properties to it. To do so, use the [pg-connection-string](https://www.npmjs.com/package/pg-connection-string) library:
-
-```bash
-npm install pg-connection-string
-```
-
-Here is an example of what the `parse` function does:
+Next, add a `production` key to the `customConfigs` object in your `knexfile.js`. Add in the `DB_URL` as `connectionString` into the connection object with an additional `ssl.rejectUnauthorized` property set to false:
 
 ```js
-const { parse } = require('pg-connection-string');
-const result = parse('postgres://username:pass@hostname:381/dbname');
-/*
-result === {
-  host: "hostname",
-  database: "dbname",
-  user: "username",
-  password: "pass",
-  port: "381",
-}
-*/
-```
-
-Next, add a `production` key to the `customConfigs` object in your `knexfile.js`. Spread the result of parsing the `DB_URL` into the connection object, adding an additional `ssl.rejectUnauthorized` property set to false:
-
-```js
-const { parse } = require('pg-connection-string');
-//..
 const { DB_URL } = process.env;
 // ...
 const customConfigs = {
   // ...
   production: {
     connection: {
-      ...parse(DB_URL),
+      connectionString: DB_URL,
       ssl: {
         rejectUnauthorized: false,
       },
