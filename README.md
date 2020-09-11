@@ -1,41 +1,12 @@
 # Northcoders News API
 
-**You can clone this repository but do not fork it**
-
 ## Background
 
 We will be building the API to use in the Northcoders News Sprint during the Front End block of the course.
 
 Your database will be PSQL, and you will interact with it using [Knex](https://knexjs.org).
 
-## Step 1 - Setting up your own repository
-
-Clone this repo:
-
-```bash
-git clone https://github.com/northcoders/be-nc-news
-
-cd be-nc-news
-```
-
-On GitHub create your own **public** repository for your project. **Make sure NOT to initialise it with a README or .gitignore.**
-
-Next, you should hook your local version up to the newly created GitHub repo. Use the following terminal commands, making sure to check the git remotes with each step (`git remote -v`):
-
-```bash
-git remote remove origin
-
-# This will prevent you from pushing to the original Northcoders' repo.
-```
-
-```bash
-git remote add origin <YOUR-GITHUB-URL>
-
-# This will add your GitHub location to your local git repository.
-# You can confirm this by checking the new git remote.
-```
-
-## Step 2 - Setting up your project
+## Step 1 - Setting up your project
 
 In this repo we have provided you with the knexfile. Make sure to add it to the `.gitignore` once you start pushing to your own repository. If you are on linux insert your postgres username and password into the knexfile.
 
@@ -54,7 +25,7 @@ The job of the `db/data/index.js` file will be to export out of the db folder _o
 
 **HINT: make sure the keys you export match up with the keys required into the seed file**
 
-## Step 3 - Migrations and Seeding
+## Step 2 - Migrations and Seeding
 
 Your seed file should now be set up to require in either test or dev data depending on the environment.
 
@@ -102,13 +73,13 @@ Each comment should have:
 
 You need to complete the provided seed function to insert the appropriate data into your database.
 
-Utilising your data manipulation skills, you will also need to complete the utility functions provided - `formatDate`, `makeRefObj`, and `formatComments` for the seed function to work. Instructions on these utility functions are in the [utils README](./db/utils/README.md).
+Utilising your data manipulation skills, you will need to design some utility functions to ensure that the data can fit into your tables. These functions should be extracted into your `utils.js` and built using TDD. If you feeling stuck, think about how the data looks now and compare it to how it should look for it fit into your table. The katas we gave you on day 1 of this block might be useful.
 
 **Some advice: don't write all the utility functions in one go, write them when you need them in your seed**
 
 ---
 
-## Step 4 - Building Endpoints
+## Step 3 - Building Endpoints
 
 - Use proper project configuration from the offset, being sure to treat development and test environments differently.
 - Test each route **as you go**, checking both successful requests **and the variety of errors you could expect to encounter** [See the error-handling file here for ideas of errors that will need to be considered](error-handling.md).
@@ -119,25 +90,33 @@ Utilising your data manipulation skills, you will also need to complete the util
 
 ### Vital Routes
 
-Your server _must_ have the following endpoints:
+Work through building endpoints in the following order:
+_details for each endpoint are provided below_
 
 ```http
 GET /api/topics
 
 GET /api/users/:username
 
-GET /api/articles/:article_id
+DELETE /api/articles/:article_id
 PATCH /api/articles/:article_id
+GET /api/articles/:article_id
 
 POST /api/articles/:article_id/comments
 GET /api/articles/:article_id/comments
 
 GET /api/articles
+POST /api/articles
 
 PATCH /api/comments/:comment_id
 DELETE /api/comments/:comment_id
 
 GET /api
+
+DELETE /api/articles/:article_id
+POST /api/topics
+POST /api/users
+GET /api/users
 ```
 
 ---
@@ -305,9 +284,9 @@ PATCH /api/comments/:comment_id
 
   e.g.
 
-  `{ inc_votes : 1 }` would increment the current comments's vote property by 1
+  `{ inc_votes : 1 }` would increment the current comment's vote property by 1
 
-  `{ inc_votes : -1 }` would decrement the current comments's vote property by 1
+  `{ inc_votes : -1 }` would decrement the current comment's vote property by 1
 
 #### Responds with
 
@@ -329,13 +308,7 @@ DELETE /api/comments/:comment_id
 
 ---
 
-# STOP!
-
-If you have reached this point, go back and review all of the routes that you have created. Consider whether there are any errors that could occur that you haven't yet accounted for. If you identify any, write a test, and then handle the error. Even if you can't think of a specific error for a route, every controller that invokes a promise-based model should contain a `.catch` block to prevent unhandled promise rejections.
-
-As soon as you think that you have handled all the possible errors that you can think of, let someone on the teaching team know. One of us will be able to take a look at your code and give you some feedback. While we are looking at your code, you can continue with the following:
-
-# Continue...
+# ADVANCED TASKS
 
 ---
 
@@ -348,22 +321,6 @@ GET /api
 - JSON describing all the available endpoints on your API
 
 ---
-
-### Step 3 - Hosting
-
-Make sure your application and your database is hosted using Heroku
-
-See the hosting.md file in this repo for more guidance
-
-### Step 4 - README
-
-Write a README for your project. Check out this [guide](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2) for what sort of things should be included.
-
-It should also include the link to where your Heroku app is hosted.
-
-Take a look at GitHub's guide for [mastering markdown](https://guides.github.com/features/mastering-markdown/) for making it look pretty!
-
-### Optional Extras
 
 #### Pagination
 
@@ -392,12 +349,8 @@ Should accept the following queries:
 #### More Routes
 
 ```http
-POST /api/articles
-
 DELETE /api/articles/:article_id
-
 POST /api/topics
-
 POST /api/users
 GET /api/users
 ```

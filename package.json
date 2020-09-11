@@ -6,7 +6,7 @@
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "knex seed:run",
-    "test": "jest --watch"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
