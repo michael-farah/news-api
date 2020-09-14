@@ -2,13 +2,13 @@
 
 ## Background
 
-We will be building the API to use in the Northcoders News Sprint during the Front End block of the course.
+We will be building an API for the purpose of accessing application data programmatically. The intention here is to mimick the building of a real world backend service (such as reddit) which should provide this information to the front end architecture.
 
 Your database will be PSQL, and you will interact with it using [Knex](https://knexjs.org).
 
 ## Step 1 - Setting up your project
 
-In this repo we have provided you with the knexfile. Make sure to add it to the `.gitignore` once you start pushing to your own repository. If you are on linux insert your postgres username and password into the knexfile.
+In this repo we have provided you with the knexfile. Be sure to add it to the `.gitignore` before you start pushing to your repository. If you are on linux insert your postgres username and password into the knexfile.
 
 You have also been provided with a `db` folder with some data, a [setup.sql](./db/setup.sql) file, a `seeds` folder and a `utils` folder. You should also take a minute to familiarise yourself with the npm scripts you have been provided.
 
