@@ -1,4 +1,5 @@
 # Hosting a PSQL DB using Heroku
+**\*\* This file is only relavant for an advanced task. You can ignore this until then! \*\***
 
 There are many ways to host applications like the one you have created. One of these solutions is Heroku. Heroku provides a service that you can push your code to and it will build, run and host it. Heroku also allows for easy database integration. Their [documentation](https://devcenter.heroku.com/articles/getting-started-with-nodejs) is excellent, so take a look at that. This document is essentially a more condensed, specific version of the steps described in the Heroku docs.
 
