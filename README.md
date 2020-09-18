@@ -92,6 +92,7 @@ Utilising your data manipulation skills, you will need to design some utility fu
 ### Vital Routes
 
 Work through building endpoints in the following order:
+You will work through the first endpoint in your pair and then diverge for the rest of the sprint.
 _details for each endpoint are provided below_
 
 ```http
