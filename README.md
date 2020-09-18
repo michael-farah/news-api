@@ -4,6 +4,7 @@
 
 We will be building an API for the purpose of accessing application data programmatically. The intention here is to mimick the building of a real world backend service (such as reddit) which should provide this information to the front end architecture.
 
+
 Your database will be PSQL, and you will interact with it using [Knex](https://knexjs.org).
 
 ## Step 1 - Setting up your project
@@ -96,6 +97,8 @@ _details for each endpoint are provided below_
 ```http
 GET /api/topics
 
+>>> Time to go solo! <<<
+
 GET /api/users/:username
 
 DELETE /api/articles/:article_id
@@ -170,6 +173,8 @@ GET /api/users/:username
   - `name`
 
 ---
+**Please now bid farewell to your pair and continue on this sprint working solo. Ensure that you fork your partner's repo so you don't run into merge conflicts.**
+
 
 ```http
 GET /api/articles/:article_id
