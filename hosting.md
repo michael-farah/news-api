@@ -133,7 +133,15 @@ const knex = require('knex');
 
 const dbConfig =
   ENV === 'production'
-    ? { client: 'pg', connection: process.env.DATABASE_URL }
+    ? { 
+        client: 'pg', 
+        connection: { 
+          connectionString: process.env.DATABASE_URL,
+          ssl: {
+            rejectUnauthorized: false,
+          },
+        }, 
+      }
     : require('../knexfile');
 
 module.exports = knex(dbConfig);
