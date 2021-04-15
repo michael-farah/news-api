@@ -232,11 +232,6 @@ Responds with:
   - `author` which is the `username` from the users table
   - `body`
 
-Should accepts queries **RETURN TO**:
-
-- `sort_by`, which sorts the comments by any valid column (defaults to created_at)
-- `order`, which can be set to `asc` or `desc` for ascending or descending (defaults to descending)
-
 ---
 
 #### **POST /api/articles/:article_id/comments**
@@ -332,6 +327,8 @@ Should accept the following queries:
 
 - `limit`, which limits the number of responses (defaults to 10)
 - `p`, stands for page which specifies the page at which to start (calculated using limit)
+
+---
 
 #### POST /api/articles
 
