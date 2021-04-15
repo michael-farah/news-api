@@ -10,7 +10,7 @@ You will spend the setup and seeding phase of this project in a pair, and separa
 
 ## Step 1 - Setting up your project
 
-In this repo we have provided you with the knexfile. Be sure to add it to the `.gitignore` before you start pushing to your repository. If you are on linux insert your postgres username and password into the `.env` file too. **RETURN TO**
+You will need to create a `.env` file for your project. Be sure to add it to the `.gitignore` before you start pushing to your repository. If you are on linux insert your postgres username and password into the `.env` file too. **RETURN TO**
 
 You have also been provided with a `db` folder with some data, a [setup.sql](./db/setup.sql) file, a `seeds` folder and a `utils` folder. You should also take a minute to familiarise yourself with the npm scripts you have been provided.
 
@@ -25,13 +25,9 @@ The job of `index.js` in each the data folders is to export out all the data fro
 
 ## Step 2 - Creating tables and Seeding
 
-Your seed file should now be set up to require in either test or dev data depending on the environment.
-
-You will need to create your migrations and complete the provided seed function to insert the appropriate data into your database.
+You will need to create your tables and write your seed function to insert the data into your database.
 
 ### Creating Tables
-
-This is where you will set up the schema for each table in your database.
 
 You should have separate tables for `topics`, `articles`, `users` and `comments`. Make sure to consider the order in which you create your tables. You should think about whether you require any constraints on your table columns (e.g. 'NOT NULL')
 
