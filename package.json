@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
-    "seed": "knex seed:run",
+    "seed": "node ./db/run-seed.js",
     "test": "jest"
   },
   "repository": {

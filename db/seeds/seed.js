@@ -5,6 +5,6 @@ const {
   userData,
 } = require('../data/index.js');
 
-exports.seed = function (knex) {
+exports.seed = function () {
   // add seeding functionality here
 };
