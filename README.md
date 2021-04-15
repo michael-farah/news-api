@@ -209,8 +209,13 @@ Should accept queries:
 
 **STOP POINT: it's now time to host your app and write a README.md so that this portfolio piece is ready!**
 
-- See `hosting.md` to details on how to host this
-- Write your README **RETURN TO!!!**
+- See `hosting.md` to details on how to host your project
+- Write your README, including the following information:
+  - [ ] Link to hosted version
+  - [ ] Write a summary of what the project is
+  - [ ] Provide clear instructions of how to clone, install dependencies, seed local database, and run tests
+  - [ ] Include information about how to create `.env`
+  - [ ] Specify minimum versions of `Node.js` and `Postgres` needed to run the project
 
 ---
 
