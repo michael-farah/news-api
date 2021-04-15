@@ -90,45 +90,34 @@ Utilising your data manipulation skills, you will need to design some utility fu
 
 ---
 
-### Vital Routes
-
 Work through building endpoints in the following order:
 
 You will work through the first endpoint in your pair and then diverge for the rest of the sprint.
 
-_details for each endpoint are provided below_
+_Here is a summary of all the endpoints. More detail about each endpoint is further down this document._
 
-```http
-GET /api/topics
+**Essential Endpoints**
 
->>> Time to go solo! <<<
-
-GET /api/users/:username
-
-DELETE /api/articles/:article_id
-PATCH /api/articles/:article_id
-GET /api/articles/:article_id
-
-POST /api/articles/:article_id/comments
-GET /api/articles/:article_id/comments
-
-GET /api/articles
-POST /api/articles
-
-PATCH /api/comments/:comment_id
-DELETE /api/comments/:comment_id
-
-GET /api
-
-DELETE /api/articles/:article_id
-POST /api/topics
-POST /api/users
-GET /api/users
+```txt
+- GET /api/topics
+  > Time to go solo!
+- GET /api/articles/:article_id
+- PATCH /api/articles/:article_id
+- GET /api/articles
 ```
 
----
+> Time to go host and write your README!
 
-### Route Requirements
+**Further Endpoints**
+
+- GET /api/articles/:article_id/comments
+- POST /api/articles/:article_id/comments
+- DELETE /api/comments/:comment_id
+- GET /api/users
+- GET /api/users/:username
+- PATCH /api/comments/:comment_id
+
+---
 
 _**All of your endpoints should send the below responses in an object, with a key name of what it is that being sent. E.g.**_
 
@@ -153,11 +142,11 @@ _**All of your endpoints should send the below responses in an object, with a ke
 
 ---
 
-```http
-GET /api/topics
-```
+### Essential Routes
 
-#### Responds with
+#### GET /api/topics
+
+Responds with:
 
 - an array of topic objects, each of which should have the following properties:
   - `slug`
@@ -167,25 +156,9 @@ GET /api/topics
 
 **Please now bid farewell to your pair and continue on this sprint working solo. Ensure that you fork your partner's repo so you don't run into merge conflicts.**
 
+#### GET /api/articles/:article_id
 
-```http
-GET /api/users/:username
-```
-
-#### Responds with
-
-- a user object which should have the following properties:
-  - `username`
-  - `avatar_url`
-  - `name`
-
----
-
-```http
-GET /api/articles/:article_id
-```
-
-#### Responds with
+Responds with:
 
 - an article object, which should have the following properties:
 
@@ -200,11 +173,9 @@ GET /api/articles/:article_id
 
 ---
 
-```http
-PATCH /api/articles/:article_id
-```
+#### PATCH /api/articles/:article_id
 
-#### Request body accepts
+Request body accepts:
 
 - an object in the form `{ inc_votes: newVote }`
 
@@ -216,53 +187,15 @@ PATCH /api/articles/:article_id
 
   `{ inc_votes : -100 }` would decrement the current article's vote property by 100
 
-#### Responds with
+Responds with:
 
 - the updated article
 
 ---
 
-```http
-POST /api/articles/:article_id/comments
-```
+#### GET /api/articles
 
-#### Request body accepts
-
-- an object with the following properties:
-  - `username`
-  - `body`
-
-#### Responds with
-
-- the posted comment
-
----
-
-```http
-GET /api/articles/:article_id/comments
-```
-
-#### Responds with
-
-- an array of comments for the given `article_id` of which each comment should have the following properties:
-  - `comment_id`
-  - `votes`
-  - `created_at`
-  - `author` which is the `username` from the users table
-  - `body`
-
-#### Accepts queries
-
-- `sort_by`, which sorts the comments by any valid column (defaults to created_at)
-- `order`, which can be set to `asc` or `desc` for ascending or descending (defaults to descending)
-
----
-
-```http
-GET /api/articles
-```
-
-#### Responds with
+Responds with:
 
 - an `articles` array of article objects, each of which should have the following properties:
   - `author` which is the `username` from the users table
@@ -273,7 +206,7 @@ GET /api/articles
   - `votes`
   - `comment_count` which is the total count of all the comments with this article_id - you should make use of knex queries in order to achieve this
 
-#### Should accept queries
+Should accept queries:
 
 - `sort_by`, which sorts the articles by any valid column (defaults to date)
 - `order`, which can be set to `asc` or `desc` for ascending or descending (defaults to descending)
@@ -282,11 +215,77 @@ GET /api/articles
 
 ---
 
-```http
-PATCH /api/comments/:comment_id
-```
+**STOP POINT: it's now time to host your app and write a README.md so that this portfolio piece is ready**
 
-#### Request body accepts
+---
+
+### Further Routes
+
+- See `hosting.md` to details on how to host this
+- Write your README **RETURN TO!!!**
+
+#### **GET /api/articles/:article_id/comments**
+
+Responds with:
+
+- an array of comments for the given `article_id` of which each comment should have the following properties:
+  - `comment_id`
+  - `votes`
+  - `created_at`
+  - `author` which is the `username` from the users table
+  - `body`
+
+Should accepts queries **RETURN TO**:
+
+- `sort_by`, which sorts the comments by any valid column (defaults to created_at)
+- `order`, which can be set to `asc` or `desc` for ascending or descending (defaults to descending)
+
+---
+
+#### **POST /api/articles/:article_id/comments**
+
+Request body accepts:
+
+- an object with the following properties:
+  - `username`
+  - `body`
+
+Responds with:
+
+- the posted comment
+
+---
+
+#### **DELETE /api/comments/:comment_id**
+
+Should:
+
+- delete the given comment by `comment_id`
+
+Responds with:
+
+- status 204 and no content
+
+---
+
+#### **GET /api/users <---- WRITE**
+
+---
+
+#### **GET /api/users/:username**
+
+Responds with:
+
+- a user object which should have the following properties:
+  - `username`
+  - `avatar_url`
+  - `name`
+
+---
+
+#### **PATCH /api/comments/:comment_id**
+
+Request body accepts:
 
 - an object in the form `{ inc_votes: newVote }`
 
@@ -298,23 +297,9 @@ PATCH /api/comments/:comment_id
 
   `{ inc_votes : -1 }` would decrement the current comment's vote property by 1
 
-#### Responds with
+Responds with:
 
 - the updated comment
-
----
-
-```http
-DELETE /api/comments/:comment_id
-```
-
-#### Should
-
-- delete the given comment by `comment_id`
-
-#### Responds with
-
-- status 204 and no content
 
 ---
 
@@ -322,9 +307,7 @@ DELETE /api/comments/:comment_id
 
 ---
 
-```http
-GET /api
-```
+#### **GET /api**
 
 #### Responds with
 
@@ -338,14 +321,11 @@ Make sure your application and your database is hosted using Heroku
 
 See the hosting.md file in this repo for more guidance
 
-
 #### Pagination
 
 To make sure that an API can handle large amounts of data, it is often necessary to use **pagination**. Head over to [Google](https://www.google.co.uk/search?q=cute+puppies), and you will notice that the search results are broken down into pages. It would not be feasible to serve up _all_ the results of a search in one go. The same is true of websites / apps like Facebook or Twitter (except they hide this by making requests for the next page in the background, when we scroll to the bottom of the browser). We can implement this functionality on our `/api/articles` and `/api/comments` endpoints.
 
-```http
-GET /api/articles
-```
+#### GET /api/articles
 
 - Should accepts the following queries:
   - `limit`, which limits the number of responses (defaults to 10)
@@ -354,9 +334,7 @@ GET /api/articles
 
 ---
 
-```http
-GET /api/articles/:article_id/comments
-```
+#### GET /api/articles/:article_id/comments
 
 Should accept the following queries:
 
