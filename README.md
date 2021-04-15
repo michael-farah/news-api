@@ -4,17 +4,17 @@
 
 We will be building an API for the purpose of accessing application data programmatically. The intention here is to mimick the building of a real world backend service (such as reddit) which should provide this information to the front end architecture.
 
-Your database will be PSQL, and you will interact with it using [Knex](https://knexjs.org).
+Your database will be PSQL, and you will interact with it using [node-postgres](https://node-postgres.com/).
 
 You will spend the setup and seeding phase of this project in a pair, and separate once its time to build the server up! The point to separate is clearly annotated :)
 
 ## Step 1 - Setting up your project
 
-In this repo we have provided you with the knexfile. Be sure to add it to the `.gitignore` before you start pushing to your repository. If you are on linux insert your postgres username and password into the knexfile.
+In this repo we have provided you with the knexfile. Be sure to add it to the `.gitignore` before you start pushing to your repository. If you are on linux insert your postgres username and password into the `.env` file too. **RETURN TO**
 
 You have also been provided with a `db` folder with some data, a [setup.sql](./db/setup.sql) file, a `seeds` folder and a `utils` folder. You should also take a minute to familiarise yourself with the npm scripts you have been provided.
 
-Your second task is to make accessing both sets of data around your project easier. You should make 3 `index.js` files: one in `db/data`, and one in each of your data folders (test & development).
+Your second task is to make accessing both sets of data around your project easier. You should make 2 `index.js` files: one in each of your data folders (test & development).
 
 The job of `index.js` in each the data folders is to export out all the data from that folder, currently stored in separate files. This is so that, when you need access to the data elsewhere, you can write one convenient require statement - to the index file, rather than having to require each file individually. Think of it like a index of a book - a place to refer to! Make sure the index file exports an object with values of the data from that folder with the keys:
 
@@ -23,21 +23,17 @@ The job of `index.js` in each the data folders is to export out all the data fro
 - `userData`
 - `commentData`
 
-The job of the `db/data/index.js` file will be to export out of the db folder _only the data relevant to the current environment_. Specifically this file should allow your seed file to access only a specific set of data depending on the environment it's in: test, development or production. To do this it will have to require in all the data and should make use of `process.env` in your `index.js` file to achieve only exporting the right data out.
-
-**HINT: make sure the keys you export match up with the keys required into the seed file**
-
-## Step 2 - Migrations and Seeding
+## Step 2 - Creating tables and Seeding
 
 Your seed file should now be set up to require in either test or dev data depending on the environment.
 
 You will need to create your migrations and complete the provided seed function to insert the appropriate data into your database.
 
-### Migrations
+### Creating Tables
 
 This is where you will set up the schema for each table in your database.
 
-You should have separate tables for `topics`, `articles`, `users` and `comments`. You will need to think carefully about the order in which you create your migrations. You should think carefully about whether you require any constraints on your table columns (e.g. 'NOT NULL')
+You should have separate tables for `topics`, `articles`, `users` and `comments`. Make sure to consider the order in which you create your tables. You should think about whether you require any constraints on your table columns (e.g. 'NOT NULL')
 
 Each topic should have:
 
@@ -86,7 +82,6 @@ Utilising your data manipulation skills, you will need to design some utility fu
 - Use proper project configuration from the offset, being sure to treat development and test environments differently.
 - Test each route **as you go**, checking both successful requests **and the variety of errors you could expect to encounter** [See the error-handling file here for ideas of errors that will need to be considered](error-handling.md).
 - After taking the happy path when testing a route, think about how a client could make it go wrong. Add a test for that situation, then error handling to deal with it gracefully.
-- **HINT**: You will need to take advantage of knex migrations in order to efficiently test your application.
 
 ---
 
@@ -108,18 +103,20 @@ _Here is a summary of all the endpoints. More detail about each endpoint is furt
 
 > Time to go host and write your README!
 
-**Further Endpoints**
+**Further Endpoints to work through**
 
+```txt
 - GET /api/articles/:article_id/comments
 - POST /api/articles/:article_id/comments
 - DELETE /api/comments/:comment_id
 - GET /api/users
 - GET /api/users/:username
 - PATCH /api/comments/:comment_id
+```
 
 ---
 
-_**All of your endpoints should send the below responses in an object, with a key name of what it is that being sent. E.g.**_
+All of your endpoints should send the responses specified below in an **object**, with a **key name** of what it is that being sent. E.g.
 
 ```json
 {
@@ -169,7 +166,7 @@ Responds with:
   - `topic`
   - `created_at`
   - `votes`
-  - `comment_count` which is the total count of all the comments with this article_id - you should make use of knex queries in order to achieve this
+  - `comment_count` which is the total count of all the comments with this article_id - you should make use of queries to the database in order to achieve this
 
 ---
 
@@ -204,25 +201,24 @@ Responds with:
   - `topic`
   - `created_at`
   - `votes`
-  - `comment_count` which is the total count of all the comments with this article_id - you should make use of knex queries in order to achieve this
+  - `comment_count` which is the total count of all the comments with this article_id - you should make use of queries to the database in order to achieve this
 
 Should accept queries:
 
 - `sort_by`, which sorts the articles by any valid column (defaults to date)
 - `order`, which can be set to `asc` or `desc` for ascending or descending (defaults to descending)
-- `author`, which filters the articles by the username value specified in the query
 - `topic`, which filters the articles by the topic value specified in the query
 
 ---
 
-**STOP POINT: it's now time to host your app and write a README.md so that this portfolio piece is ready**
+**STOP POINT: it's now time to host your app and write a README.md so that this portfolio piece is ready!**
+
+- See `hosting.md` to details on how to host this
+- Write your README **RETURN TO!!!**
 
 ---
 
 ### Further Routes
-
-- See `hosting.md` to details on how to host this
-- Write your README **RETURN TO!!!**
 
 #### **GET /api/articles/:article_id/comments**
 
@@ -270,6 +266,11 @@ Responds with:
 
 #### **GET /api/users <---- WRITE**
 
+Responds with:
+
+- an array of objects, each object should have the following property:
+  - `username`
+
 ---
 
 #### **GET /api/users/:username**
@@ -303,29 +304,19 @@ Responds with:
 
 ---
 
-# ADVANCED TASKS
-
----
+### _Even more_ endpoints/tasks
 
 #### **GET /api**
 
-#### Responds with
+Responds with:
 
 - JSON describing all the available endpoints on your API
 
 ---
 
-#### Hosting
+#### Adding pagination to GET /api/articles - adding pagination
 
-Make sure your application and your database is hosted using Heroku
-
-See the hosting.md file in this repo for more guidance
-
-#### Pagination
-
-To make sure that an API can handle large amounts of data, it is often necessary to use **pagination**. Head over to [Google](https://www.google.co.uk/search?q=cute+puppies), and you will notice that the search results are broken down into pages. It would not be feasible to serve up _all_ the results of a search in one go. The same is true of websites / apps like Facebook or Twitter (except they hide this by making requests for the next page in the background, when we scroll to the bottom of the browser). We can implement this functionality on our `/api/articles` and `/api/comments` endpoints.
-
-#### GET /api/articles
+> To make sure that an API can handle large amounts of data, it is often necessary to use **pagination**. Head over to [Google](https://www.google.co.uk/search?q=cute+puppies), and you will notice that the search results are broken down into pages. It would not be feasible to serve up _all_ the results of a search in one go. The same is true of websites / apps like Facebook or Twitter (except they hide this by making requests for the next page in the background, when we scroll to the bottom of the browser). We can implement this functionality on our `/api/articles` and `/api/comments` endpoints.
 
 - Should accepts the following queries:
   - `limit`, which limits the number of responses (defaults to 10)
@@ -334,18 +325,55 @@ To make sure that an API can handle large amounts of data, it is often necessary
 
 ---
 
-#### GET /api/articles/:article_id/comments
+#### Adding pagination to GET /api/articles/:article_id/comments
 
 Should accept the following queries:
 
 - `limit`, which limits the number of responses (defaults to 10)
 - `p`, stands for page which specifies the page at which to start (calculated using limit)
 
-#### More Routes
+#### POST /api/articles
 
-```http
-DELETE /api/articles/:article_id
-POST /api/topics
-POST /api/users
-GET /api/users
+Request body accepts:
+
+- an object with the following properties:
+
+  - `author` which is the `username` from the users table
+  - `title`
+  - `body`
+  - `topic`
+
+Responds with:
+
+- the newly added article, with all the above properties as well as:
+  - `article_id`
+  - `votes`
+  - `created_at`
+  - `comment_count`
+
+#### POST /api/topics
+
+Request body accepts:
+
+- an object in the form:
+
+```json
+{
+  "slug": "topic name here",
+  "description": "description here"
+}
 ```
+
+Responds with:
+
+- a topic object containing the newly added topic
+
+#### DELETE /api/articles/:article_id
+
+Should:
+
+- delete the given article by article_id
+
+Respond with:
+
+- status 204 and no content
