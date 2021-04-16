@@ -1,5 +1,6 @@
 # Hosting a PSQL DB using Heroku
-**\*\* This file is only relavant for an advanced task. You can ignore this until then! \*\***
+
+**\*\* This file is only relevant for an advanced task. You can ignore this until then! \*\***
 
 There are many ways to host applications like the one you have created. One of these solutions is Heroku. Heroku provides a service that you can push your code to and it will build, run and host it. Heroku also allows for easy database integration. Their [documentation](https://devcenter.heroku.com/articles/getting-started-with-nodejs) is excellent, so take a look at that. This document is essentially a more condensed, specific version of the steps described in the Heroku docs.
 
@@ -68,90 +69,63 @@ heroku config:get DATABASE_URL
 
 If you are in your app's directory, and the database is correctly linked as an add on to Heroku, it should display a DB URI string that is exactly the same as the one in your credentials.
 
-At the top of your `knexfile.js`, add the following line of code:
-
-```js
-const { DB_URL } = process.env;
-```
-
-Next, add a `production` key to the `customConfigs` object in your `knexfile.js`. Add in the `DB_URL` as `connectionString` into the connection object with an additional `ssl.rejectUnauthorized` property set to false:
-
-```js
-const { DB_URL } = process.env;
-// ...
-const customConfigs = {
-  // ...
-  production: {
-    connection: {
-      connectionString: DB_URL,
-      ssl: {
-        rejectUnauthorized: false,
-      },
-    },
-  },
-};
-// ...
-```
-
-It is critical to set the `ssl.rejectUnauthorized` property to `false`, otherwise we will not be able to connect to the hosted database from your local machine.
-
-In your `./db/data/index.js` add a key of production with a value of your development data in your data object. Something like:
-
-```js
-const data = { test, development, production: development };
-```
-
-This is will ensure your production DB will get seeded with the development data.
-
 In your `package.json`, add the following keys to the scripts:
 
 ```json
 {
   "scripts": {
-    "seed:prod": "NODE_ENV=production DB_URL=$(heroku config:get DATABASE_URL) knex seed:run",
-    "migrate-latest:prod": "NODE_ENV=production DB_URL=$(heroku config:get DATABASE_URL) knex migrate:latest",
-    "migrate-rollback:prod": "NODE_ENV=production DB_URL=$(heroku config:get DATABASE_URL) knex migrate:rollback"
+    "seed:prod": "NODE_ENV=production DATABASE_URL=$(heroku config:get DATABASE_URL) npm run seed"
   }
 }
 ```
 
-Each of these will establish an environment variable called `DB_URL`, and set it to whatever heroku provides as your DB URL. It is essential that you do this as the DB URL may change! This deals with a lack of predictability on heroku's end.
+This will establish an environment variable called `DATABASE_URL`, and set it to whatever heroku provides as your database's URL. It is essential that you do this as the database URL may change! This deals with a lack of predictability on heroku's end.
 
-Make sure to **run the seed prod script** from your `package.json`:
+At the top of your `connection.js`, assign the value of the NODE_ENV to a variable (you may have already created this variable):
+
+```js
+const ENV = process.env.NODE_ENV || 'development';
+```
+
+It is important to check that we have either the development/test PGDATABASE variable or the production DATABASE_URL. If both are missing from the `process.env`, then throw an error.
+
+```js
+if (!process.env.PGDATABASE && !process.env.DATABASE_URL) {
+  throw new Error('PGDATABASE or DATABASE_URL not set');
+}
+```
+
+Next, add a `config` variable. If the `ENV` is production, this variable should hold a config object, containing the `DATABASE_URL` at the `connectionString` key, along with an additional `ssl.rejectUnauthorized` property set to false. This allows you to connect to the hosted database from your local machine.
+
+```js
+const ENV = process.env.NODE_ENV || 'development';
+// ...
+const config =
+  ENV === 'production'
+    ? {
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      }
+    : {};
+
+module.exports = new Pool(config);
+
+// ...
+```
+
+Now, **run the seed prod script** that you added to your `package.json` earlier:
 
 ```bash
 npm run seed:prod
 ```
 
-## 6. Connect To The Hosted Database when on Heroku
-
-Change your connection file to look something like this:
-
-```js
-const ENV = process.env.NODE_ENV || 'development';
-const knex = require('knex');
-
-const dbConfig =
-  ENV === 'production'
-    ? { 
-        client: 'pg', 
-        connection: { 
-          connectionString: process.env.DATABASE_URL,
-          ssl: {
-            rejectUnauthorized: false,
-          },
-        }, 
-      }
-    : require('../knexfile');
-
-module.exports = knex(dbConfig);
-```
-
-It should check whether you're in production, and if you are, it should connect to the production database. Otherwise it will connect to the (`.gitignore`'d) knex file.
+It should check whether you're in production, and if you are, it should connect to the production database. Otherwise it will connect to the test or development database specified in your (`.gitignore`'d) `.env` files.
 
 ## 7. Use Heroku's PORT
 
-In `listen.js`, make sure you take the PORT off the environment object if it's provided, like so:
+In `listen.js`, make sure you take the PORT off the environment object if it's provided. This is because heroku will provide a port if in production.
 
 ```js
 const { PORT = 9090 } = process.env;
