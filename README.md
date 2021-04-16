@@ -89,7 +89,7 @@ You will work through the first endpoint in your pair and then diverge for the r
 
 _Here is a summary of all the endpoints. More detail about each endpoint is further down this document._
 
-**Essential Endpoints**
+**Essential endpoints**
 
 ```txt
 - GET /api/topics
@@ -97,15 +97,15 @@ _Here is a summary of all the endpoints. More detail about each endpoint is furt
 - GET /api/articles/:article_id
 - PATCH /api/articles/:article_id
 - GET /api/articles
-```
-
-> Time to go host and write your README!
-
-**Further Endpoints to work through**
-
-```txt
 - GET /api/articles/:article_id/comments
 - POST /api/articles/:article_id/comments
+```
+
+> Hosting and README time!
+
+**Next endpoints to work through**
+
+```txt
 - DELETE /api/comments/:comment_id
 - GET /api/users
 - GET /api/users/:username
@@ -139,7 +139,7 @@ All of your endpoints should send the responses specified below in an **object**
 
 ### Essential Routes
 
-#### GET /api/topics
+#### **GET /api/topics**
 
 Responds with:
 
@@ -151,7 +151,7 @@ Responds with:
 
 **Please now bid farewell to your pair and continue on this sprint working solo. Ensure that you fork your partner's repo so you don't run into merge conflicts.**
 
-#### GET /api/articles/:article_id
+#### **GET /api/articles/:article_id**
 
 Responds with:
 
@@ -168,7 +168,7 @@ Responds with:
 
 ---
 
-#### PATCH /api/articles/:article_id
+#### **PATCH /api/articles/:article_id**
 
 Request body accepts:
 
@@ -188,7 +188,7 @@ Responds with:
 
 ---
 
-#### GET /api/articles
+#### **GET /api/articles**
 
 Responds with:
 
@@ -208,20 +208,6 @@ Should accept queries:
 - `topic`, which filters the articles by the topic value specified in the query
 
 ---
-
-**STOP POINT: it's now time to host your app and write a README.md so that this portfolio piece is ready!**
-
-- See `hosting.md` to details on how to host your project
-- Write your README, including the following information:
-  - [ ] Link to hosted version
-  - [ ] Write a summary of what the project is
-  - [ ] Provide clear instructions of how to clone, install dependencies, seed local database, and run tests
-  - [ ] Include information about how to create `.env`
-  - [ ] Specify minimum versions of `Node.js` and `Postgres` needed to run the project
-
----
-
-### Further Routes
 
 #### **GET /api/articles/:article_id/comments**
 
@@ -249,6 +235,21 @@ Responds with:
 - the posted comment
 
 ---
+
+**STOP POINT: Hosting and README!**
+
+- If you _have_ already hosted your app at this point, remember to push up to `heroku` your updated code
+- If you haven't already hosted your app, now is the time! Follow the instructions in [hosting.md](./hosting.md)
+- Write your README, including the following information:
+  - [ ] Link to hosted version
+  - [ ] Write a summary of what the project is
+  - [ ] Provide clear instructions of how to clone, install dependencies, seed local database, and run tests
+  - [ ] Include information about how to create the two `.env` files
+  - [ ] Specify minimum versions of `Node.js` and `Postgres` needed to run the project
+
+---
+
+### Further Routes
 
 #### **DELETE /api/comments/:comment_id**
 
