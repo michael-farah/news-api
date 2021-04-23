@@ -91,25 +91,30 @@ _Here is a summary of all the endpoints. More detail about each endpoint is furt
 
 **Essential endpoints**
 
-```txt
-- GET /api/topics
-  > Time to go solo!
-- GET /api/articles/:article_id
-- PATCH /api/articles/:article_id
-- GET /api/articles
-- GET /api/articles/:article_id/comments
-- POST /api/articles/:article_id/comments
+```http
+GET /api/topics
+```
+
+> Time to go solo!
+
+```http
+GET /api/articles/:article_id
+PATCH /api/articles/:article_id
+GET /api/articles
+GET /api/articles/:article_id/comments
+POST /api/articles/:article_id/comments
+GET /api
 ```
 
 > Hosting and README time!
 
 **Next endpoints to work through**
 
-```txt
-- DELETE /api/comments/:comment_id
-- GET /api/users
-- GET /api/users/:username
-- PATCH /api/comments/:comment_id
+```http
+DELETE /api/comments/:comment_id
+GET /api/users
+GET /api/users/:username
+PATCH /api/comments/:comment_id
 ```
 
 ---
@@ -236,6 +241,14 @@ Responds with:
 
 ---
 
+#### **GET /api**
+
+Responds with:
+
+- JSON describing all the available endpoints on your API, see the [endpoints.json](./endpoints.json) for an (incomplete) example that you could build on, or create your own from scratch!
+
+---
+
 **STOP POINT: Hosting and README!**
 
 - If you _have_ already hosted your app at this point, remember to push up to `heroku` your updated code
@@ -263,7 +276,7 @@ Responds with:
 
 ---
 
-#### **GET /api/users <---- WRITE**
+#### **GET /api/users**
 
 Responds with:
 
@@ -304,14 +317,6 @@ Responds with:
 ---
 
 ### _Even more_ endpoints/tasks
-
-#### **GET /api**
-
-Responds with:
-
-- JSON describing all the available endpoints on your API
-
----
 
 #### Adding pagination to GET /api/articles - adding pagination
 
