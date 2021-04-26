@@ -249,7 +249,7 @@ Responds with:
 
 ---
 
-**STOP POINT: Hosting and README!**
+### **STOP POINT: Hosting and README!**
 
 - If you _have_ already hosted your app at this point, remember to push up to `heroku` your updated code
 - If you haven't already hosted your app, now is the time! Follow the instructions in [hosting.md](./hosting.md)
