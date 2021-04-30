@@ -44,7 +44,7 @@ git remote -v
 ## 3. Push Your code up to Heroku
 
 ```bash
-git push heroku master
+git push heroku main
 ```
 
 ## 4. Creating a Hosted Database
