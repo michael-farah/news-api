@@ -63,7 +63,7 @@ Each comment should have:
 - `created_at` defaults to the current timestamp
 - `body`
 
-- **NOTE:** psql expects `Timestamp` types to be in a specific date format - **not a unix timestamp** as they are in our data! However, you can easily **re-format a unix timestamp into something compatible with our database using JS - you will be doing this in your utility functions**... [JavaScript Date object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
+
 
 ### Seeding
 
