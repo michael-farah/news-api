@@ -1,12 +1,9 @@
-/*
-Here you will need to require in:
-
-- the seed function, 
-- the dev data,
-*/
+const devData = require('../data/development-data/index.js');
+const seed = require('./seed.js');
+const db = require('../connection.js');
 
 const runSeed = () => {
-  // run the seed with the data
+  return seed(devData).then(() => db.end());
 };
 
 runSeed();
