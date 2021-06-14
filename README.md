@@ -14,8 +14,6 @@ You will need to create _two_ `.env` files for your project: `.env.test` and `.e
 
 You have also been provided with a `db` folder with some data, a [setup.sql](./db/setup.sql) file, a `seeds` folder and a `utils` folder. You should also take a minute to familiarise yourself with the npm scripts you have been provided.
 
-Your second task is to make accessing both sets of data around your project easier. You should make 2 `index.js` files: one in each of your data folders (test & development).
-
 The job of `index.js` in each the data folders is to export out all the data from that folder, currently stored in separate files. This is so that, when you need access to the data elsewhere, you can write one convenient require statement - to the index file, rather than having to require each file individually. Think of it like a index of a book - a place to refer to! Make sure the index file exports an object with values of the data from that folder with the keys:
 
 - `topicData`
@@ -27,7 +25,7 @@ The job of `index.js` in each the data folders is to export out all the data fro
 
 You will need to create your tables and write your seed function to insert the data into your database.
 
-In order to both create the tables and seed your data, you will need to create a connection to your database. You can do this in the provided `connection.js`.
+In order to both create the tables and seed your data, you will need the connection to your database. You can find this in the provided `connection.js`.
 
 ### Creating Tables
 
@@ -62,8 +60,6 @@ Each comment should have:
 - `votes` defaults to 0
 - `created_at` defaults to the current timestamp
 - `body`
-
-
 
 ### Seeding
 
