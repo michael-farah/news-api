@@ -5,7 +5,7 @@ Here you will need to require in:
 - the dev data,
 */
 
-const runSeed = async () => {
+const runSeed = () => {
   // run the seed with the data
 };
 
