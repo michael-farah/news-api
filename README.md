@@ -256,6 +256,8 @@ Responds with:
   - [ ] Include information about how to create the two `.env` files
   - [ ] Specify minimum versions of `Node.js` and `Postgres` needed to run the project
 
+**Remember that this README is targetted at people who will come to your repo (potentially from your CV or portfolio website) and want to see what you have created, and try it out for themselves(not _just_ to look at your code!). So it is really important to include a link to the hosted version, as well as implement the above `GET /api` endpoint so that it is clear what your api does.**
+
 ---
 
 ### Further Routes
