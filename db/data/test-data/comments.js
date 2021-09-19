@@ -1,128 +1,128 @@
 module.exports = [
   {
     body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
-    belongs_to: "They're not exactly dogs, are they?",
-    created_by: 'butter_bridge',
     votes: 16,
-    created_at: new Date(1586179020000)
+    created_at: '2020-04-06T13:17:00.000Z',
+    author: 'butter_bridge',
+    article_id: 9,
   },
   {
     body: 'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.',
-    belongs_to: 'Living in the shadow of a great man',
-    created_by: 'butter_bridge',
     votes: 14,
-    created_at: new Date(1604113380000)
+    created_at: '2020-10-31T03:03:00.000Z',
+    author: 'butter_bridge',
+    article_id: 1,
   },
   {
     body: 'Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.',
-    belongs_to: 'Living in the shadow of a great man',
-    created_by: 'icellusedkars',
     votes: 100,
-    created_at: new Date(1583025180000)
+    created_at: '2020-03-01T01:13:00.000Z',
+    author: 'icellusedkars',
+    article_id: 1,
   },
   {
     body: ' I carry a log — yes. Is it funny to you? It is not to me.',
-    belongs_to: 'Living in the shadow of a great man',
-    created_by: 'icellusedkars',
     votes: -100,
-    created_at: new Date(1582459260000)
+    created_at: '2020-02-23T12:01:00.000Z',
+    author: 'icellusedkars',
+    article_id: 1,
   },
   {
     body: 'I hate streaming noses',
-    belongs_to: 'Living in the shadow of a great man',
-    created_by: 'icellusedkars',
     votes: 0,
-    created_at: new Date(1604437200000)
+    created_at: '2020-11-03T21:00:00.000Z',
+    author: 'icellusedkars',
+    article_id: 1,
   },
   {
     body: 'I hate streaming eyes even more',
-    belongs_to: 'Living in the shadow of a great man',
-    created_by: 'icellusedkars',
     votes: 0,
-    created_at: new Date(1586642520000)
+    created_at: '2020-04-11T22:02:00.000Z',
+    author: 'icellusedkars',
+    article_id: 1,
   },
   {
     body: 'Lobster pot',
-    belongs_to: 'Living in the shadow of a great man',
-    created_by: 'icellusedkars',
     votes: 0,
-    created_at: new Date(1589577540000)
+    created_at: '2020-05-15T21:19:00.000Z',
+    author: 'icellusedkars',
+    article_id: 1,
   },
   {
     body: 'Delicious crackerbreads',
-    belongs_to: 'Living in the shadow of a great man',
-    created_by: 'icellusedkars',
     votes: 0,
-    created_at: new Date(1586899140000)
+    created_at: '2020-04-14T21:19:00.000Z',
+    author: 'icellusedkars',
+    article_id: 1,
   },
   {
     body: 'Superficially charming',
-    belongs_to: 'Living in the shadow of a great man',
-    created_by: 'icellusedkars',
     votes: 0,
-    created_at: new Date(1577848080000)
+    created_at: '2020-01-01T03:08:00.000Z',
+    author: 'icellusedkars',
+    article_id: 1,
   },
   {
     body: 'git push origin master',
-    belongs_to: 'Living in the shadow of a great man',
-    created_by: 'icellusedkars',
     votes: 0,
-    created_at: new Date(1592641440000)
+    created_at: '2020-06-20T08:24:00.000Z',
+    author: 'icellusedkars',
+    article_id: 1,
   },
   {
     body: 'Ambidextrous marsupial',
-    belongs_to: 'Living in the shadow of a great man',
-    created_by: 'icellusedkars',
     votes: 0,
-    created_at: new Date(1600560600000)
+    created_at: '2020-09-20T00:10:00.000Z',
+    author: 'icellusedkars',
+    article_id: 1,
   },
   {
     body: 'Massive intercranial brain haemorrhage',
-    belongs_to: 'Living in the shadow of a great man',
-    created_by: 'icellusedkars',
     votes: 0,
-    created_at: new Date(1583133000000)
+    created_at: '2020-03-02T07:10:00.000Z',
+    author: 'icellusedkars',
+    article_id: 1,
   },
   {
     body: 'Fruit pastilles',
-    belongs_to: 'Living in the shadow of a great man',
-    created_by: 'icellusedkars',
     votes: 0,
-    created_at: new Date(1592220300000)
+    created_at: '2020-06-15T11:25:00.000Z',
+    author: 'icellusedkars',
+    article_id: 1,
   },
   {
     body: 'What do you see? I have no idea where this will lead us. This place I speak of, is known as the Black Lodge.',
-    belongs_to: 'UNCOVERED: catspiracy to bring down democracy',
-    created_by: 'icellusedkars',
     votes: 16,
-    created_at: new Date(1591682400000)
+    created_at: '2020-06-09T06:00:00.000Z',
+    author: 'icellusedkars',
+    article_id: 5,
   },
   {
     body: "I am 100% sure that we're not completely sure.",
-    belongs_to: 'UNCOVERED: catspiracy to bring down democracy',
-    created_by: 'butter_bridge',
     votes: 1,
-    created_at: new Date(1606176480000)
+    created_at: '2020-11-24T00:08:00.000Z',
+    author: 'butter_bridge',
+    article_id: 5,
   },
   {
     body: 'This is a bad article name',
-    belongs_to: 'A',
-    created_by: 'butter_bridge',
     votes: 1,
-    created_at: new Date(1602433380000)
+    created_at: '2020-10-11T16:23:00.000Z',
+    author: 'butter_bridge',
+    article_id: 6,
   },
   {
     body: 'The owls are not what they seem.',
-    belongs_to: "They're not exactly dogs, are they?",
-    created_by: 'icellusedkars',
     votes: 20,
-    created_at: new Date(1584205320000)
+    created_at: '2020-03-14T17:02:00.000Z',
+    author: 'icellusedkars',
+    article_id: 9,
   },
   {
     body: 'This morning, I showered for nine minutes.',
-    belongs_to: 'Living in the shadow of a great man',
-    created_by: 'butter_bridge',
     votes: 16,
-    created_at: new Date(1595294400000)
-  }
+    created_at: '2020-07-21T01:20:00.000Z',
+    author: 'butter_bridge',
+    article_id: 1,
+  },
 ];
