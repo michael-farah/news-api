@@ -6,7 +6,6 @@ We will be building an API for the purpose of accessing application data program
 
 Your database will be PSQL, and you will interact with it using [node-postgres](https://node-postgres.com/).
 
-You will spend the setup and seeding phase of this project in a pair, and separate once its time to build the server up! The point to separate is clearly annotated :)
 
 ## Step 1 - Setting up your project
 
@@ -65,7 +64,7 @@ Each comment should have:
 
 You need to complete the provided seed function to insert the appropriate data into your database.
 
-Utilising your data manipulation skills, you will need to design some utility functions to ensure that the data can fit into your tables. These functions should be extracted into your `utils.js` and built using TDD. If you're feeling stuck, think about how the data looks now and compare it to how it should look for it fit into your table. The katas we gave you on day 1 of this block might be useful.
+Utilising your data manipulation skills, you will need to design some utility functions to ensure that the data can fit into your tables. These functions should be extracted into your `utils.js` and built using TDD. If you're feeling stuck, think about how the data looks now and compare it to how it should look for it fit into your table. The katas we gave you earlier in this block might be useful.
 
 **Some advice: don't write all the utility functions in one go, write them when you need them in your seed**
 
@@ -81,19 +80,12 @@ Utilising your data manipulation skills, you will need to design some utility fu
 
 Work through building endpoints in the following order:
 
-You will work through the first endpoint in your pair and then diverge for the rest of the sprint.
-
-_Here is a summary of all the endpoints. More detail about each endpoint is further down this document._
+_This is a summary of all the endpoints. More detail about each endpoint is further down this document._
 
 **Essential endpoints**
 
 ```http
 GET /api/topics
-```
-
-> Time to go solo!
-
-```http
 GET /api/articles/:article_id
 PATCH /api/articles/:article_id
 GET /api/articles
@@ -149,8 +141,6 @@ Responds with:
   - `description`
 
 ---
-
-**Please now bid farewell to your pair and continue on this sprint working solo. If you have not made the original fork, ensure that you fork your partner's repo so that you don't run into merge conflicts.**
 
 #### **GET /api/articles/:article_id**
 
