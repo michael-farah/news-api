@@ -91,6 +91,7 @@ PATCH /api/articles/:article_id
 GET /api/articles
 GET /api/articles/:article_id/comments
 POST /api/articles/:article_id/comments
+DELETE /api/comments/:comment_id
 GET /api
 ```
 
@@ -99,7 +100,6 @@ GET /api
 **Next endpoints to work through**
 
 ```http
-DELETE /api/comments/:comment_id
 GET /api/users
 GET /api/users/:username
 PATCH /api/comments/:comment_id
@@ -227,6 +227,18 @@ Responds with:
 
 ---
 
+#### **DELETE /api/comments/:comment_id**
+
+Should:
+
+- delete the given comment by `comment_id`
+
+Responds with:
+
+- status 204 and no content
+
+---
+
 #### **GET /api**
 
 Responds with:
@@ -251,18 +263,6 @@ Responds with:
 ---
 
 ### Further Routes
-
-#### **DELETE /api/comments/:comment_id**
-
-Should:
-
-- delete the given comment by `comment_id`
-
-Responds with:
-
-- status 204 and no content
-
----
 
 #### **GET /api/users**
 
