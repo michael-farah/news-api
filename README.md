@@ -62,7 +62,7 @@ Each comment should have:
 
 ### Seeding
 
-You need to complete the provided seed function to manage your tables and insert the appropriate data into your database.
+You need to complete the provided seed function to insert the appropriate data into your database.
 
 ---
 
