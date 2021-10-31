@@ -11,7 +11,7 @@ Your database will be PSQL, and you will interact with it using [node-postgres](
 
 You will need to create _two_ `.env` files for your project: `.env.test` and `.env.development`. Into each, add `PGDATABASE=<database_name_here>`, with the correct database name for that environment (see `/db/setup.sql` for the database names). Double check that these `.env` files are .gitignored.
 
-You have also been provided with a `db` folder with some data, a [setup.sql](./db/setup.sql) file, a `seeds` folder and a `utils` folder. You should also take a minute to familiarise yourself with the npm scripts you have been provided.
+You have also been provided with a `db` folder with some data, a [setup.sql](./db/setup.sql) file and a `seeds` folder. You should also take a minute to familiarise yourself with the npm scripts you have been provided.
 
 The job of `index.js` in each the data folders is to export out all the data from that folder, currently stored in separate files. This is so that, when you need access to the data elsewhere, you can write one convenient require statement - to the index file, rather than having to require each file individually. Think of it like a index of a book - a place to refer to! Make sure the index file exports an object with values of the data from that folder with the keys:
 
@@ -62,11 +62,7 @@ Each comment should have:
 
 ### Seeding
 
-You need to complete the provided seed function to insert the appropriate data into your database.
-
-Utilising your data manipulation skills, you will need to design some utility functions to ensure that the data can fit into your tables. These functions should be extracted into your `utils.js` and built using TDD. If you're feeling stuck, think about how the data looks now and compare it to how it should look for it fit into your table. The katas we gave you earlier in this block might be useful.
-
-**Some advice: don't write all the utility functions in one go, write them when you need them in your seed**
+You need to complete the provided seed function to manage your tables and insert the appropriate data into your database.
 
 ---
 
