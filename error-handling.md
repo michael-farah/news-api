@@ -1,6 +1,6 @@
 # Possible Errors
 
-This is an _incomplete_ guide to the possible errors that may happen in your app. We have left some of them blank to prompt you to think about the errors that could occur as a client uses each endpoint that you have created.
+This is an _**incomplete**_ guide to the possible errors that may happen in your app. We have left some of them blank to prompt you to think about the errors that could occur as a client uses each endpoint that you have created.
 
 Think about what could go wrong for each route, and the HTTP status code should be sent to the client in each case.
 For each thing that could go wrong, make a test with your expected status code and then make sure that possibility is handled.
