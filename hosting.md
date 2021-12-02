@@ -152,10 +152,10 @@ Make sure your package.json has this as a start script:
 "start": "node listen.js",
 ```
 
-Commit your changes, and push to heroku master.
+Commit your changes, and push to heroku main.
 
 ```bash
-git push heroku master
+git push heroku main
 ```
 
 ## 9. Review Your App
