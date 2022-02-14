@@ -24,7 +24,7 @@ git checkout -b <new branch name>
 
 This will create a branch and move over to that branch. (Omit the `-b` flag if you wish to switch to an already existing branch).
 
-We recommend that you name the branch the number assigned to each ticket. eg. `news-4` or `games-4`
+We recommend that you name the branch the number assigned to each ticket. eg. `ncnews-4`
 
 When pushing the branch to git hub ensure that you make reference to the branch you are pushing to on the remote.
 
@@ -47,3 +47,9 @@ You can tidy up your local branches once they have been pull into main by deleti
 ```
 git branch -D <local branch>
 ```
+
+## Husky
+
+To ensure we are not commiting broken code this project makes use of git hooks. Git hooks are scripts triggered during certain events in the git lifecycle. Husky is a popular package which allows us to set up and maintain these scripts. This project makes use a _pre-commit hook_. When we attempt to commit our work, the script defined in the `pre-commit` file will run. If any of our tests fail than the commit will be aborted.
+
+The [Husky documentation](https://typicode.github.io/husky/#/) explains how to configure Husky for your own project as well as creating your own custom hooks.\_
