@@ -2,17 +2,6 @@
 
 **\*\* This file is only relevant for an advanced task. You can ignore this until then! \*\***
 
-Before you do this, please make your own public repo so that you can share this project as part of your portfolio by doing the following:
-
-1. Create a new _public_ GitHub repository, and do **not** initialise the project with a readme, .gitignore or license.
-2. From your _local_ copy of your repository, push your code to your new respository using the following commands:
-
-```bash
-git remote set-url origin YOUR_NEW_REPO_URL_HERE
-git branch -M main
-git push -u origin main
-```
-
 There are many ways to host applications like the one you have created. One of these solutions is Heroku. Heroku provides a service that you can push your code to and it will build, run and host it. Heroku also allows for easy database integration. Their [documentation](https://devcenter.heroku.com/articles/getting-started-with-nodejs) is excellent, so take a look at that. This document is essentially a more condensed, specific version of the steps described in the Heroku docs.
 
 ## 1. Install the Heroku CLI
