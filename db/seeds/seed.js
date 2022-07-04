@@ -1,11 +1,10 @@
 const format = require('pg-format');
+const db = require('../connection');
 const {
   convertTimestampToDate,
   createRef,
   formatComments,
-} = require('../helpers/utils');
-const db = require('../connection');
-const { dropTables, createTables } = require('../helpers/manage-tables');
+} = require('./utils');
 
 const seed = async ({ topicData, userData, articleData, commentData }) => {
   await db.query(`DROP TABLE IF EXISTS comments;`);
