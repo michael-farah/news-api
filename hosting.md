@@ -6,13 +6,13 @@ There are many ways to host applications like the one you have created. One of t
 
 ## 1. Install the Heroku CLI
 
-With npm:
+Install the [heroku cli](https://devcenter.heroku.com/articles/heroku-cli) globally with the following npm command:
 
 ```bash
 npm i heroku -g
 ```
 
-On macOS:
+Alternative installation method on macOS:
 
 ```bash
 brew tap heroku/brew && brew install heroku
