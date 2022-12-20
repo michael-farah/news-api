@@ -35,7 +35,8 @@ const seed = async ({ topicData, userData, articleData, commentData }) => {
     author VARCHAR NOT NULL REFERENCES users(username),
     body VARCHAR NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
-    votes INT DEFAULT 0 NOT NULL
+    votes INT DEFAULT 0 NOT NULL,
+    article_img_url VARCHAR DEFAULT 'https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700'
   );`);
 
   await db.query(`
