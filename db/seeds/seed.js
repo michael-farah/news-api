@@ -73,16 +73,17 @@ const seed = async ({ topicData, userData, articleData, commentData }) => {
 
   const formattedArticleData = articleData.map(convertTimestampToDate);
   const insertArticlesQueryStr = format(
-    'INSERT INTO articles (title, topic, author, body, created_at, votes) VALUES %L RETURNING *;',
+    'INSERT INTO articles (title, topic, author, body, created_at, votes, article_img_url) VALUES %L RETURNING *;',
     formattedArticleData.map(
-      ({ title, topic, author, body, created_at, votes = 0 }) => [
+      ({
         title,
         topic,
         author,
         body,
         created_at,
-        votes,
-      ]
+        votes = 0,
+        article_img_url,
+      }) => [title, topic, author, body, created_at, votes, article_img_url]
     )
   );
 
