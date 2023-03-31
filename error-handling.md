@@ -7,6 +7,8 @@ For each thing that could go wrong, make a test with your expected status code a
 
 Bear in mind, handling bad inputs from clients doesn't necessarily have to lead to a 4\*\* status code. Handling can include using default behaviours or even ignoring parts of the request.
 
+The following is _not_ a comprehensive list! Its purpose is just to get the ball rolling down the sad path 😢
+
 ---
 
 ## Relevant HTTP Status Codes
