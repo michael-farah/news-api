@@ -29,10 +29,14 @@ This command will fetch and install the required packages:
 
 - **Dependencies:**
   - [**`dotenv`**](https://www.npmjs.com/package/dotenv)
-  - [**`jest`**](https://jestjs.io/)
-  - [**`jest-extended`**](https://www.npmjs.com/package/jest-extended)
+  - [**`express`**](https://www.npmjs.com/package/express)
   - [**`pg`**](https://node-postgres.com/)
   - [**`pg-format`**](https://www.npmjs.com/package/pg-format)
+
+- **Dev Dependencies:**
+  - [**`jest`**](https://jestjs.io/)
+  - [**`jest-extended`**](https://www.npmjs.com/package/jest-extended)
+  - [**`supertest`**](https://www.npmjs.com/package/supertest)
 
 ### 3. Database Setup and Seed Data
 
