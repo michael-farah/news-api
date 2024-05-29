@@ -8,71 +8,119 @@ beforeEach(() => seed(data)); // Seed the database with the test data
 
 afterAll(() => db.end()); // Close the database connection
 
-// Test suite for handling unknown routes
 describe("Error handling for unknown routes", () => {
   test("404: Path not found", async () => {
-    // Send a GET request to an unknown route
-    const response = await request(app).get("/api/unknown");
-
-    // Assert the response status and message
-    expect(response.status).toBe(404);
+    const response = await request(app).get("/api/unknown").expect(404);
     expect(response.body.msg).toBe("Path not found");
   });
 });
 
-// Test suite for GET /api
 describe("GET /api", () => {
   const endpoints = require("../endpoints.json");
+
   test("200: Returns all available endpoints", async () => {
-    const response = await request(app).get("/api");
-    expect(response.status).toBe(200);
+    const response = await request(app).get("/api").expect(200);
     expect(response.body).toEqual(endpoints);
   });
 });
 
-// Test suite for GET /api/topics
 describe("GET /api/topics", () => {
   test("200: Return all topics", async () => {
-    // Send a GET request to /api/topics
-    const response = await request(app).get("/api/topics");
-
-    // Assert the response status and length of topics array
-    expect(response.status).toBe(200);
+    const response = await request(app).get("/api/topics").expect(200);
     expect(response.body.topics).toHaveLength(3);
   });
 
   test("200: Return expected topic data", async () => {
-    // Send a GET request to /api/topics
-    const response = await request(app).get("/api/topics");
-
-    // Define the expected topics data
+    const response = await request(app).get("/api/topics").expect(200);
     const expectedTopics = [
       { slug: "mitch", description: "The man, the Mitch, the legend" },
       { slug: "cats", description: "Not dogs" },
       { slug: "paper", description: "what books are made of" },
     ];
-
-    // Assert the response status and topics data
-    expect(response.status).toBe(200);
     expect(response.body.topics).toEqual(
       expect.arrayContaining(expectedTopics),
     );
   });
 
   test("500: Internal Server Error", async () => {
-    // Mock the database query to throw an error
     const mockQuery = jest
       .spyOn(db, "query")
       .mockRejectedValueOnce(new Error("Database error"));
-
-    // Send a GET request to /api/topics
-    const response = await request(app).get("/api/topics");
-
-    // Assert the response status and error message
-    expect(response.status).toBe(500);
+    const response = await request(app).get("/api/topics").expect(500);
     expect(response.body.msg).toBe("Internal Server Error");
-
-    // Restore the original implementation of the database query
     mockQuery.mockRestore();
+  });
+});
+
+describe("GET /api/articles/:articleId", () => {
+  const getArticleById = async (articleId) => {
+    const response = await request(app)
+      .get(`/api/articles/${articleId}`)
+      .expect(200);
+    return response.body;
+  };
+
+  const getExpectedArticleData = (articleId) => {
+    const article = data.articleData[articleId - 1];
+    const createdAt = new Date(article.created_at);
+    // The article with id 1 and 2 have a timezone offset of -1 hour due to BST.
+    if (articleId !== 3) {
+      createdAt.setHours(createdAt.getHours() - 1);
+    }
+    const expectedCreatedAt = createdAt.toISOString();
+
+    return {
+      article_id: articleId,
+      title: article.title,
+      topic: article.topic,
+      author: article.author,
+      body: article.body,
+      created_at: expectedCreatedAt,
+      votes: article.votes || 0,
+      article_img_url: article.article_img_url,
+    };
+  };
+
+  const testCases = [
+    { articleId: 1, description: "returns article with id 1" },
+    { articleId: 2, description: "returns article with id 2" },
+    { articleId: 3, description: "returns article with id 3" },
+  ];
+
+  testCases.forEach(({ articleId, description }) => {
+    test(description, async () => {
+      const article = await getArticleById(articleId);
+      expect(article).toEqual(getExpectedArticleData(articleId));
+    });
+  });
+
+  describe("Error Handling for GET /api/articles/:articleId", () => {
+    const testErrorHandling = async (
+      articleId,
+      expectedStatusCode,
+      expectedMsg,
+    ) => {
+      const response = await request(app)
+        .get(`/api/articles/${articleId}`)
+        .expect(expectedStatusCode);
+      expect(response.body.msg).toBe(expectedMsg);
+    };
+
+    test("400: Bad request with invalid article id", async () => {
+      await testErrorHandling("invalid-id", 400, "Bad request");
+    });
+
+    test("404: Article not found", async () => {
+      await testErrorHandling(99999, 404, "Article not found");
+    });
+
+    test("500: Internal Server Error", async () => {
+      const articleId = 1;
+      const mockQuery = jest
+        .spyOn(db, "query")
+        .mockRejectedValueOnce(new Error("Database error"));
+      await testErrorHandling(articleId, 500, "Internal Server Error");
+      mockQuery.mockRestore();
+    });
   });
 });
