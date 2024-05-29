@@ -20,6 +20,16 @@ describe("Error handling for unknown routes", () => {
   });
 });
 
+// Test suite for GET /api
+describe("GET /api", () => {
+  const endpoints = require("../endpoints.json");
+  test("200: Returns all available endpoints", async () => {
+    const response = await request(app).get("/api");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(endpoints);
+  });
+});
+
 // Test suite for GET /api/topics
 describe("GET /api/topics", () => {
   test("200: Return all topics", async () => {
