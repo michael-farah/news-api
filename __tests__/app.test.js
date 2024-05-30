@@ -30,23 +30,17 @@ describe("GET /api/articles", () => {
     expect(response.body).toHaveLength(13);
     expect(Array.isArray(response.body)).toBe(true);
     response.body.forEach((article) => {
-      expect(article).toHaveProperty("author");
-      expect(article.author).toEqual(expect.any(String))
-      expect(article).toHaveProperty("title");
-      expect(article.title).toEqual(expect.any(String))
-      expect(article).toHaveProperty("article_id");
-      expect(article.article_id).toEqual(expect.any(Number))
-      expect(article).toHaveProperty("topic");
-      expect(article.topic).toEqual(expect.any(String))
-      expect(article).toHaveProperty("created_at");
-      expect(article.created_at).toEqual(expect.any(String))
-      expect(article).toHaveProperty("votes");
-      expect(article.votes).toEqual(expect.any(Number))
-      expect(article).toHaveProperty("article_img_url");
-      expect(article.article_img_url).toEqual(expect.any(String))
+      expect(article).toMatchObject({
+        article_id: expect.any(Number),
+        author: expect.any(String),
+        title: expect.any(String),
+        topic: expect.any(String),
+        created_at: expect.any(String),
+        votes: expect.any(Number),
+        article_img_url: expect.any(String),
+        comment_count: expect.any(Number),
+      });
       expect(article).not.toHaveProperty("body");
-      expect(article).toHaveProperty("comment_count");
-      expect(article.comment_count).toEqual(expect.any(Number))
     });
   });
   test("200: Returns articles sorted by date in descending order", async () => {
