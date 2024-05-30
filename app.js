@@ -11,6 +11,7 @@ const app = express();
 
 app.get("/api", api.getEndpoints);
 app.get("/api/topics", topics.getTopics);
+app.get("/api/articles", articles.getArticles);
 app.get("/api/articles/:article_id", articles.getArticle);
 errorHandler(app);
 
