@@ -27,18 +27,39 @@
     },
     "/api/articles": {
       "method": "GET",
-      "description": "Returns an array of all articles",
-      "queries": ["author", "topic", "sort_by", "order"],
+      "description": "Returns an array of all articles, sorted by default in descending order by created_at",
+      "queries": ["sort_by, order"],
       "requestBody": null,
       "exampleResponse": {
         "articles": [
           {
-            "title": "Seafood substitutions are increasing",
-            "topic": "cooking",
             "author": "weegembump",
-            "body": "Text from the article..",
-            "created_at": "2018-05-30T15:59:13.341Z",
+            "title": "The best fish for the week",
+            "article_id": 3,
+            "topic": "cooking",
+            "created_at": "2022-05-30T15:59:13.341Z",
             "votes": 0,
+            "article_img_url": "https://example.com/best-fish-for-the-week.jpg",
+            "comment_count": 5
+          },
+          {
+            "author": "weegembump",
+            "title": "The Great Seafood Debate",
+            "article_id": 2,
+            "topic": "cooking",
+            "created_at": "2021-05-30T15:59:13.341Z",
+            "votes": 0,
+            "article_img_url": "https://example.com/great-seafood-debate.jpg",
+            "comment_count": 10
+          },
+          {
+            "author": "weegembump",
+            "title": "Seafood substitutions are increasing",
+            "article_id": 1,
+            "topic": "cooking",
+            "created_at": "2020-05-29T15:59:13.341Z",
+            "votes": 0,
+            "article_img_url": "https://example.com/seafood-article.jpg",
             "comment_count": 6
           }
         ]
