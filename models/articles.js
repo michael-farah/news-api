@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const utils = require("../db/seeds/utils");
 exports.fetchArticle = async (article_id) => {
   const {
     rows: [article],
@@ -9,29 +10,7 @@ exports.fetchArticle = async (article_id) => {
 };
 
 exports.fetchArticles = async (sort_by = "created_at", order = "desc") => {
-  const validSortBy = ["created_at", "author", "title", "topic", "votes"];
-  const validOrder = ["asc", "desc"];
-
-  if (!validSortBy.includes(sort_by) && !validOrder.includes(order)) {
-    const err = new Error();
-    err.status = 400;
-    err.msg = "Invalid sort_by and order values";
-    throw err;
-  }
-
-  if (!validSortBy.includes(sort_by)) {
-    const err = new Error();
-    err.status = 400;
-    err.msg = `Invalid sort_by value: ${sort_by}`;
-    throw err;
-  }
-
-  if (!validOrder.includes(order)) {
-    const err = new Error();
-    err.status = 400;
-    err.msg = `Invalid order value: ${order}`;
-    throw err;
-  }
+  utils.validateSortAndOrder(sort_by, order);
 
   const query = `
     SELECT 
