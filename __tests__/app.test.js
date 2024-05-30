@@ -24,6 +24,94 @@ describe("GET /api", () => {
   });
 });
 
+describe("GET /api/articles", () => {
+  test("200: Returns all articles with the correct format and length", async () => {
+    const response = await request(app).get("/api/articles").expect(200);
+    expect(response.body).toHaveLength(13);
+    expect(Array.isArray(response.body)).toBe(true);
+    response.body.forEach((article) => {
+      expect(article).toHaveProperty("author");
+      expect(article.author).toEqual(expect.any(String))
+      expect(article).toHaveProperty("title");
+      expect(article.title).toEqual(expect.any(String))
+      expect(article).toHaveProperty("article_id");
+      expect(article.article_id).toEqual(expect.any(Number))
+      expect(article).toHaveProperty("topic");
+      expect(article.topic).toEqual(expect.any(String))
+      expect(article).toHaveProperty("created_at");
+      expect(article.created_at).toEqual(expect.any(String))
+      expect(article).toHaveProperty("votes");
+      expect(article.votes).toEqual(expect.any(Number))
+      expect(article).toHaveProperty("article_img_url");
+      expect(article.article_img_url).toEqual(expect.any(String))
+      expect(article).not.toHaveProperty("body");
+      expect(article).toHaveProperty("comment_count");
+      expect(article.comment_count).toEqual(expect.any(Number))
+    });
+  });
+  test("200: Returns articles sorted by date in descending order", async () => {
+    const response = await request(app).get("/api/articles").expect(200);
+    expect(response.body).toBeSortedBy("created_at", { descending: true });
+  });
+  
+  test("200: Returns expected article data", async () => {
+    const response = await request(app).get("/api/articles").expect(200);
+    expect(response.body[0]).toEqual({
+      article_id: 3,
+      article_img_url:
+        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+      author: "icellusedkars",
+      comment_count: 2,
+      created_at: "2020-11-03T09:12:00.000Z",
+      title: "Eight pug gifs that remind me of mitch",
+      topic: "mitch",
+      votes: 0,
+    });
+
+    expect(response.body[12]).toEqual({
+      article_id: 7,
+      article_img_url:
+        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+      author: "icellusedkars",
+      comment_count: 0,
+      created_at: "2020-01-07T14:08:00.000Z",
+      title: "Z",
+      topic: "mitch",
+      votes: 0,
+    });
+  });
+
+
+  test("500: Internal Server Error", async () => {
+    const mockQuery = jest
+      .spyOn(db, "query")
+      .mockRejectedValueOnce(new Error("Database error"));
+    const response = await request(app).get("/api/articles").expect(500);
+    expect(response.body.msg).toBe("Internal Server Error");
+    mockQuery.mockRestore();
+  });
+
+  test("400: Bad request, invalid sort_by", async () => {
+    const response = await request(app)
+      .get("/api/articles?sort_by=invalid")
+      .expect(400);
+    expect(response.body.msg).toBe("Invalid sort_by value: invalid");
+  });
+  test("400: Bad request, invalid order", async () => {
+    const response = await request(app)
+      .get("/api/articles?order=invalid")
+      .expect(400);
+    expect(response.body.msg).toBe("Invalid order value: invalid");
+  });
+
+  test("400: Bad request, invalid order and sort_by", async () => {
+    const response = await request(app)
+      .get("/api/articles?order=invalid&sort_by=invalid")
+      .expect(400);
+    expect(response.body.msg).toBe("Invalid sort_by and order values");
+  });
+});
+
 describe("GET /api/topics", () => {
   test("200: Return all topics", async () => {
     const response = await request(app).get("/api/topics").expect(200);
