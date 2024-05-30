@@ -36,6 +36,7 @@ This command will fetch and install the required packages:
 - **Dev Dependencies:**
   - [**`jest`**](https://jestjs.io/)
   - [**`jest-extended`**](https://www.npmjs.com/package/jest-extended)
+  - [**`jest-sorted`**](https://www.npmjs.com/package/jest-sorted)
   - [**`supertest`**](https://www.npmjs.com/package/supertest)
 
 ### 3. Database Setup and Seed Data
