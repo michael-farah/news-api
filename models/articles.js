@@ -30,3 +30,11 @@ exports.fetchArticles = async (sort_by = "created_at", order = "desc") => {
   const { rows: articles } = await db.query(query);
   return articles;
 };
+
+exports.updateArticle = async (article_id, inc_votes) => {
+  const { rows: [article] } = await db.query(
+    `UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *;`,
+    [inc_votes, article_id],
+  );
+  return article || Promise.reject({ status: 404, msg: "Article not found" });
+};

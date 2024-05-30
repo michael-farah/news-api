@@ -14,6 +14,7 @@ app.get("/api", api.getEndpoints);
 app.get("/api/topics", topics.getTopics);
 app.get("/api/articles", articles.getArticles);
 app.get("/api/articles/:article_id", articles.getArticle);
+app.patch("/api/articles/:article_id", articles.patchArticle);
 
 app.get("/api/articles/:article_id/comments", comments.getComments);
 app.post("/api/articles/:article_id/comments", comments.postComment);
