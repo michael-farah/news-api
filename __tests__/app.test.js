@@ -257,3 +257,53 @@ describe("GET /api/articles/:article_id/comments", () => {
     });
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  const validComment = {
+    username: "butter_bridge",
+    body: "This is a test comment",
+  };
+
+  test("201: Should create a new comment with the provided username and body", async () => {
+    const response = await request(app)
+      .post("/api/articles/1/comments")
+      .send(validComment)
+      .expect(201);
+
+    expect(response.body).toEqual({
+      article_id: 1,
+      author: "butter_bridge",
+      body: "This is a test comment",
+    });
+  });
+
+  test("400: Bad request, invalid article_id", async () => {
+    const response = await request(app)
+      .post("/api/articles/invalid/comments")
+      .send(validComment)
+      .expect(400);
+
+    expect(response.body.msg).toBe("Bad request");
+  });
+
+  test("400: Row not found, article_id does not exist", async () => {
+    const response = await request(app)
+      .post("/api/articles/999/comments")
+      .send(validComment)
+      .expect(400);
+
+    expect(response.body.msg).toBe("Row not found");
+  });
+
+  test("400: Invalid request, missing username", async () => {
+    const invalidComment = {
+      body: "This is a test comment",
+    };
+    const response = await request(app)
+      .post("/api/articles/1/comments")
+      .send(invalidComment)
+      .expect(400);
+
+    expect(response.body.msg).toBe("Invalid request");
+  });
+});
