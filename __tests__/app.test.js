@@ -307,3 +307,73 @@ describe("POST /api/articles/:article_id/comments", () => {
     expect(response.body.msg).toBe("Invalid request");
   });
 });
+describe("PATCH /api/articles/:articleId", () => {
+  const validArticleId = 1;
+  const validIncrement = 100;
+  const invalidArticleId = "invalid";
+  const invalidIncrement = "invalid";
+
+  test("200: Should update an article by articleId", async () => {
+    const originalResponse = await request(app).get(
+      `/api/articles/${validArticleId}`,
+    );
+    const originalVotes = originalResponse.body.votes;
+    const response = await request(app)
+      .patch(`/api/articles/${validArticleId}`)
+      .send({ inc_votes: validIncrement })
+      .expect(200);
+    expect(response.body).toMatchObject({
+      author: "butter_bridge",
+      title: "Living in the shadow of a great man",
+      topic: "mitch",
+      body: "I find this existence challenging",
+      created_at: expect.any(String),
+      article_id: validArticleId,
+      votes: originalVotes + validIncrement,
+    });
+  });
+
+  test("400: Bad request, invalid articleId", async () => {
+    const response = await request(app)
+      .patch(`/api/articles/${invalidArticleId}`)
+      .send({ inc_votes: validIncrement })
+      .expect(400);
+    expect(response.body.msg).toBe("Bad request");
+  });
+
+  test("404: Not found, articleId does not exist", async () => {
+    const response = await request(app)
+      .patch(`/api/articles/999`)
+      .send({ inc_votes: validIncrement })
+      .expect(404);
+    expect(response.body.msg).toBe("Article not found");
+  });
+
+  test("400: Invalid request, missing inc_votes", async () => {
+    const response = await request(app)
+      .patch(`/api/articles/${validArticleId}`)
+      .send({})
+      .expect(400);
+    expect(response.body.msg).toBe("Invalid request");
+  });
+
+  test("400: Bad request, invalid inc_votes", async () => {
+    const response = await request(app)
+      .patch(`/api/articles/${validArticleId}`)
+      .send({ inc_votes: invalidIncrement })
+      .expect(400);
+    expect(response.body.msg).toBe("Bad request");
+  });
+
+  test("500: Internal Server Error", async () => {
+    const mockQuery = jest
+      .spyOn(db, "query")
+      .mockRejectedValueOnce(new Error("Database error"));
+    const response = await request(app)
+      .patch(`/api/articles/${validArticleId}`)
+      .send({ inc_votes: validIncrement })
+      .expect(500);
+    expect(response.body.msg).toBe("Internal Server Error");
+    mockQuery.mockRestore();
+  });
+});
