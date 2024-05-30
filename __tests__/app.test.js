@@ -30,30 +30,24 @@ describe("GET /api/articles", () => {
     expect(response.body).toHaveLength(13);
     expect(Array.isArray(response.body)).toBe(true);
     response.body.forEach((article) => {
-      expect(article).toHaveProperty("author");
-      expect(article.author).toEqual(expect.any(String))
-      expect(article).toHaveProperty("title");
-      expect(article.title).toEqual(expect.any(String))
-      expect(article).toHaveProperty("article_id");
-      expect(article.article_id).toEqual(expect.any(Number))
-      expect(article).toHaveProperty("topic");
-      expect(article.topic).toEqual(expect.any(String))
-      expect(article).toHaveProperty("created_at");
-      expect(article.created_at).toEqual(expect.any(String))
-      expect(article).toHaveProperty("votes");
-      expect(article.votes).toEqual(expect.any(Number))
-      expect(article).toHaveProperty("article_img_url");
-      expect(article.article_img_url).toEqual(expect.any(String))
+      expect(article).toMatchObject({
+        article_id: expect.any(Number),
+        author: expect.any(String),
+        title: expect.any(String),
+        topic: expect.any(String),
+        created_at: expect.any(String),
+        votes: expect.any(Number),
+        article_img_url: expect.any(String),
+        comment_count: expect.any(Number),
+      });
       expect(article).not.toHaveProperty("body");
-      expect(article).toHaveProperty("comment_count");
-      expect(article.comment_count).toEqual(expect.any(Number))
     });
   });
   test("200: Returns articles sorted by date in descending order", async () => {
     const response = await request(app).get("/api/articles").expect(200);
     expect(response.body).toBeSortedBy("created_at", { descending: true });
   });
-  
+
   test("200: Returns expected article data", async () => {
     const response = await request(app).get("/api/articles").expect(200);
     expect(response.body[0]).toEqual({
@@ -80,7 +74,6 @@ describe("GET /api/articles", () => {
       votes: 0,
     });
   });
-
 
   test("500: Internal Server Error", async () => {
     const mockQuery = jest
@@ -209,6 +202,58 @@ describe("GET /api/articles/:articleId", () => {
         .mockRejectedValueOnce(new Error("Database error"));
       await testErrorHandling(articleId, 500, "Internal Server Error");
       mockQuery.mockRestore();
+    });
+  });
+});
+
+describe("GET /api/articles/:article_id/comments", () => {
+  test("200: Return all comments for an article", async () => {
+    const response = await request(app)
+      .get("/api/articles/1/comments")
+      .expect(200);
+    expect(response.body).toHaveLength(11);
+  });
+
+  test("200: Return expected comment data", async () => {
+    const response = await request(app)
+      .get("/api/articles/1/comments")
+      .expect(200);
+    expect(response.body).toBeSortedBy("created_at", { descending: true });
+    response.body.forEach((comment) => {
+      expect(comment).toMatchObject({
+        comment_id: expect.any(Number),
+        votes: expect.any(Number),
+        created_at: expect.any(String),
+        author: expect.any(String),
+        body: expect.any(String),
+        article_id: expect.any(Number),
+      });
+    });
+  });
+  describe("Error Handling for GET /api/articles/:article_id/comments", () => {
+    test("500: Internal Server Error", async () => {
+      const mockQuery = jest
+        .spyOn(db, "query")
+        .mockRejectedValueOnce(new Error("Database error"));
+      const response = await request(app)
+        .get("/api/articles/1/comments")
+        .expect(500);
+      expect(response.body.msg).toBe("Internal Server Error");
+      mockQuery.mockRestore();
+    });
+
+    test("400: Bad request, invalid article_id", async () => {
+      const response = await request(app)
+        .get("/api/articles/invalid/comments")
+        .expect(400);
+      expect(response.body.msg).toBe("Bad request");
+    });
+
+    test("404: Not found, article_id does not exist", async () => {
+      const response = await request(app)
+        .get("/api/articles/999/comments")
+        .expect(404);
+      expect(response.body.msg).toBe("Article not found");
     });
   });
 });
