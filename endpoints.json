@@ -7,11 +7,12 @@
       "requestBody": null,
       "exampleResponse": {
         "endpoints": {
-          "/api/topics": {},
-          "/api/articles": {},
+          "/api/topics": [{}, {}, {}, {}],
+          "/api/articles": [{}, {}, {}, {}],
           "/api/articles/:article_id": {},
-          "/api/articles/:article_id/comments": {},
-          "/api/comments/:comment_id": {}
+          "/api/articles/:article_id/comments": [{}, {}, {}, {}],
+          "/api/comments/:comment_id": {},
+          "/api/users": [{}, {}, {}, {}]
         }
       }
     },
@@ -155,5 +156,33 @@
         "article_img_url": "https://example.com/seafood-article.jpg"
       }
     }
+  },
+  "/api/users": {
+    "method": "GET",
+    "description": "Returns an array of all users containing the properties username, name, and avatar_url. Handles potential errors and is documented in the /api endpoint.",
+    "queries": [],
+    "requestBody": null,
+    "exampleResponse": [
+      {
+        "username": "string",
+        "name": "string",
+        "avatar_url": "string"
+      },
+      {
+        "username": "string",
+        "name": "string",
+        "avatar_url": "string"
+      },
+      {
+        "username": "string",
+        "name": "string",
+        "avatar_url": "string"
+      },
+      {
+        "username": "string",
+        "name": "string",
+        "avatar_url": "string"
+      }
+    ]
   }
 }
