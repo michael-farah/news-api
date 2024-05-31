@@ -378,37 +378,53 @@ describe("PATCH /api/articles/:articleId", () => {
   });
 });
 
-describe('DELETE /api/comments/:comment_id', () => {
-
-  test('204: Should delete a comment by comment_id', async () => {
-    const response = await request(app)
-      .delete('/api/comments/1')
-      .expect(204);
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: Should delete a comment by comment_id", async () => {
+    const response = await request(app).delete("/api/comments/1").expect(204);
     expect(response.body).toEqual({});
   });
 
-  test('400: Bad request, invalid comment_id', async () => {
+  test("400: Bad request, invalid comment_id", async () => {
     const response = await request(app)
-      .delete('/api/comments/invalid')
+      .delete("/api/comments/invalid")
       .expect(400);
-    expect(response.body.msg).toBe('Bad request');
+    expect(response.body.msg).toBe("Bad request");
   });
 
-  test('404: Not found, comment_id does not exist', async () => {
+  test("404: Not found, comment_id does not exist", async () => {
     const response = await request(app)
-      .delete('/api/comments/1337')
+      .delete("/api/comments/1337")
       .expect(404);
-    expect(response.body.msg).toBe('Comment not found');
+    expect(response.body.msg).toBe("Comment not found");
   });
 
-  test('500: Internal Server Error', async () => {
+  test("500: Internal Server Error", async () => {
     const mockQuery = jest
-      .spyOn(db, 'query')
-      .mockRejectedValueOnce(new Error('Database error'));
-    const response = await request(app)
-      .delete('/api/comments/1')
-      .expect(500);
-    expect(response.body.msg).toBe('Internal Server Error');
+      .spyOn(db, "query")
+      .mockRejectedValueOnce(new Error("Database error"));
+    const response = await request(app).delete("/api/comments/1").expect(500);
+    expect(response.body.msg).toBe("Internal Server Error");
     mockQuery.mockRestore();
-  }); 
+  });
+});
+
+describe("GET /api/users", () => {
+  const expectedUsers = data.userData;
+
+  test("200: Return all users", async () => {
+    const { body: users } = await request(app).get("/api/users").expect(200);
+    expect(users).toHaveLength(expectedUsers.length);
+    users.forEach((user, index) => {
+      expect(user).toMatchObject(expectedUsers[index]);
+    });
+  });
+
+  test("500: Internal Server Error", async () => {
+    const mockQuery = jest
+      .spyOn(db, "query")
+      .mockRejectedValueOnce(new Error("Database error"));
+    const response = await request(app).get("/api/users").expect(500);
+    expect(response.body.msg).toBe("Internal Server Error");
+    mockQuery.mockRestore();
+  });
 });
