@@ -18,6 +18,7 @@ app.patch("/api/articles/:article_id", articles.patchArticle);
 
 app.get("/api/articles/:article_id/comments", comments.getComments);
 app.post("/api/articles/:article_id/comments", comments.postComment);
+app.delete("/api/comments/:comment_id", comments.deleteComment);
 
 errorHandler(app);
 

@@ -47,3 +47,19 @@ exports.addComment = async (article_id, username, body) => {
     return Promise.reject(err);
   }
 };
+
+exports.removeComment = async (comment_id) => {
+  const query = `DELETE FROM comments WHERE comment_id = $1`;
+  try {
+    const comment = await db.query(
+      "SELECT * FROM comments WHERE comment_id = $1",
+      [comment_id],
+    );
+    if (comment.rows.length === 0) {
+      return Promise.reject({ status: 404, msg: "Comment not found" });
+    }
+    await db.query(query, [comment_id]);
+  } catch (err) {
+    return Promise.reject(err);
+  }
+};
