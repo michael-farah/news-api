@@ -20,6 +20,8 @@ app.get("/api/articles/:article_id/comments", comments.getComments);
 app.post("/api/articles/:article_id/comments", comments.postComment);
 app.delete("/api/comments/:comment_id", comments.deleteComment);
 
+app.get("/api/users", users.getUsers);
+
 errorHandler(app);
 
 module.exports = app;
