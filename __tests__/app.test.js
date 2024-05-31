@@ -3,6 +3,12 @@ const request = require("supertest");
 const db = require("../db/connection");
 const data = require("../db/data/test-data/index");
 const seed = require("../db/seeds/seed");
+const utils = require("../db/seeds/utils");
+const assertInternalServerError = utils.createAssertInternalServerError(
+  db,
+  app,
+  request,
+);
 
 beforeEach(() => seed(data)); // Seed the database with the test data
 
@@ -26,10 +32,12 @@ describe("GET /api", () => {
 
 describe("GET /api/articles", () => {
   test("200: Returns all articles with the correct format and length", async () => {
-    const response = await request(app).get("/api/articles").expect(200);
-    expect(response.body).toHaveLength(13);
-    expect(Array.isArray(response.body)).toBe(true);
-    response.body.forEach((article) => {
+    const { body: response } = await request(app)
+      .get("/api/articles")
+      .expect(200);
+    expect(response).toHaveLength(13);
+    expect(Array.isArray(response)).toBe(true);
+    response.forEach((article) => {
       expect(article).toMatchObject({
         article_id: expect.any(Number),
         author: expect.any(String),
@@ -44,13 +52,17 @@ describe("GET /api/articles", () => {
     });
   });
   test("200: Returns articles sorted by date in descending order", async () => {
-    const response = await request(app).get("/api/articles").expect(200);
-    expect(response.body).toBeSortedBy("created_at", { descending: true });
+    const { body: response } = await request(app)
+      .get("/api/articles")
+      .expect(200);
+    expect(response).toBeSortedBy("created_at", { descending: true });
   });
 
   test("200: Returns expected article data", async () => {
-    const response = await request(app).get("/api/articles").expect(200);
-    expect(response.body[0]).toEqual({
+    const { body: response } = await request(app)
+      .get("/api/articles")
+      .expect(200);
+    expect(response[0]).toEqual({
       article_id: 3,
       article_img_url:
         "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
@@ -62,7 +74,7 @@ describe("GET /api/articles", () => {
       votes: 0,
     });
 
-    expect(response.body[12]).toEqual({
+    expect(response[12]).toEqual({
       article_id: 7,
       article_img_url:
         "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
@@ -75,33 +87,38 @@ describe("GET /api/articles", () => {
     });
   });
 
-  test("500: Internal Server Error", async () => {
-    const mockQuery = jest
-      .spyOn(db, "query")
-      .mockRejectedValueOnce(new Error("Database error"));
-    const response = await request(app).get("/api/articles").expect(500);
-    expect(response.body.msg).toBe("Internal Server Error");
-    mockQuery.mockRestore();
+  test("200: Returns articles filtered by topic", async () => {
+    const { body: response } = await request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200);
+    expect(response).toHaveLength(12);
   });
+  describe("Error handling for GET /api/articles", () => {
+    test("500: Internal Server Error", async () => {
+      await assertInternalServerError("/api/articles", "Internal Server Error");
+    });
 
-  test("400: Bad request, invalid sort_by", async () => {
-    const response = await request(app)
-      .get("/api/articles?sort_by=invalid")
-      .expect(400);
-    expect(response.body.msg).toBe("Invalid sort_by value: invalid");
-  });
-  test("400: Bad request, invalid order", async () => {
-    const response = await request(app)
-      .get("/api/articles?order=invalid")
-      .expect(400);
-    expect(response.body.msg).toBe("Invalid order value: invalid");
-  });
+    test("400: Bad request, invalid sort_by", async () => {
+      const response = await request(app)
+        .get("/api/articles?sort_by=invalid")
+        .expect(400);
+      expect(response.body.msg).toBe("Invalid sort_by value: invalid");
+    });
+    test("400: Bad request, invalid order", async () => {
+      const response = await request(app)
+        .get("/api/articles?order=invalid")
+        .expect(400);
+      expect(response.body.msg).toBe("Invalid order value: invalid");
+    });
 
-  test("400: Bad request, invalid order and sort_by", async () => {
-    const response = await request(app)
-      .get("/api/articles?order=invalid&sort_by=invalid")
-      .expect(400);
-    expect(response.body.msg).toBe("Invalid sort_by and order values");
+    test("400: Bad request, invalid order and sort_by", async () => {
+      const response = await request(app)
+        .get("/api/articles?order=invalid&sort_by=invalid")
+        .expect(400);
+      expect(response.body.msg).toBe(
+        "Invalid sort_by value: invalid and Invalid order value: invalid",
+      );
+    });
   });
 });
 
@@ -111,25 +128,22 @@ describe("GET /api/topics", () => {
     expect(response.body.topics).toHaveLength(3);
   });
 
-  test("200: Return expected topic data", async () => {
-    const response = await request(app).get("/api/topics").expect(200);
-    const expectedTopics = [
-      { slug: "mitch", description: "The man, the Mitch, the legend" },
-      { slug: "cats", description: "Not dogs" },
-      { slug: "paper", description: "what books are made of" },
-    ];
-    expect(response.body.topics).toEqual(
-      expect.arrayContaining(expectedTopics),
-    );
-  });
+  describe("Error Handling for GET /api/topics", () => {
+    test("200: Return expected topic data", async () => {
+      const response = await request(app).get("/api/topics").expect(200);
+      const expectedTopics = [
+        { slug: "mitch", description: "The man, the Mitch, the legend" },
+        { slug: "cats", description: "Not dogs" },
+        { slug: "paper", description: "what books are made of" },
+      ];
+      expect(response.body.topics).toEqual(
+        expect.arrayContaining(expectedTopics),
+      );
+    });
 
-  test("500: Internal Server Error", async () => {
-    const mockQuery = jest
-      .spyOn(db, "query")
-      .mockRejectedValueOnce(new Error("Database error"));
-    const response = await request(app).get("/api/topics").expect(500);
-    expect(response.body.msg).toBe("Internal Server Error");
-    mockQuery.mockRestore();
+    test("500: Internal Server Error", async () => {
+      await assertInternalServerError("/api/topics", "Internal Server Error");
+    });
   });
 });
 
@@ -175,33 +189,28 @@ describe("GET /api/articles/:articleId", () => {
     });
   });
 
-  describe("Error Handling for GET /api/articles/:articleId", () => {
-    const testErrorHandling = async (
-      articleId,
-      expectedStatusCode,
-      expectedMsg,
-    ) => {
-      const response = await request(app)
-        .get(`/api/articles/${articleId}`)
-        .expect(expectedStatusCode);
-      expect(response.body.msg).toBe(expectedMsg);
-    };
-
+  describe("Error Handling for GET /api/articles/:article_id", () => {
     test("400: Bad request with invalid article id", async () => {
-      await testErrorHandling("invalid-id", 400, "Bad request");
+      const article_id = "invalid";
+      const response = await request(app)
+        .get(`/api/articles/${article_id}`)
+        .expect(400);
+      expect(response.body.msg).toBe("Bad request");
     });
 
     test("404: Article not found", async () => {
-      await testErrorHandling(99999, 404, "Article not found");
+      const article_id = 1337;
+      const response = await request(app)
+        .get(`/api/articles/${article_id}`)
+        .expect(404);
+      expect(response.body.msg).toBe("Article not found");
     });
 
     test("500: Internal Server Error", async () => {
-      const articleId = 1;
-      const mockQuery = jest
-        .spyOn(db, "query")
-        .mockRejectedValueOnce(new Error("Database error"));
-      await testErrorHandling(articleId, 500, "Internal Server Error");
-      mockQuery.mockRestore();
+      await assertInternalServerError(
+        "/api/articles/1",
+        "Internal Server Error",
+      );
     });
   });
 });
@@ -232,14 +241,10 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
   describe("Error Handling for GET /api/articles/:article_id/comments", () => {
     test("500: Internal Server Error", async () => {
-      const mockQuery = jest
-        .spyOn(db, "query")
-        .mockRejectedValueOnce(new Error("Database error"));
-      const response = await request(app)
-        .get("/api/articles/1/comments")
-        .expect(500);
-      expect(response.body.msg).toBe("Internal Server Error");
-      mockQuery.mockRestore();
+      await assertInternalServerError(
+        "/api/articles/1/comments",
+        "Internal Server Error",
+      );
     });
 
     test("400: Bad request, invalid article_id", async () => {
@@ -251,7 +256,7 @@ describe("GET /api/articles/:article_id/comments", () => {
 
     test("404: Not found, article_id does not exist", async () => {
       const response = await request(app)
-        .get("/api/articles/999/comments")
+        .get("/api/articles/1337/comments")
         .expect(404);
       expect(response.body.msg).toBe("Article not found");
     });
@@ -277,43 +282,45 @@ describe("POST /api/articles/:article_id/comments", () => {
     });
   });
 
-  test("400: Bad request, invalid article_id", async () => {
-    const response = await request(app)
-      .post("/api/articles/invalid/comments")
-      .send(validComment)
-      .expect(400);
+  describe("Error Handling for POST /api/articles/:article_id/comments", () => {
+    test("400: Bad request, invalid article_id", async () => {
+      const response = await request(app)
+        .post("/api/articles/invalid/comments")
+        .send(validComment)
+        .expect(400);
 
-    expect(response.body.msg).toBe("Bad request");
-  });
+      expect(response.body.msg).toBe("Bad request");
+    });
 
-  test("400: Row not found, article_id does not exist", async () => {
-    const response = await request(app)
-      .post("/api/articles/999/comments")
-      .send(validComment)
-      .expect(400);
+    test("400: Row not found, article_id does not exist", async () => {
+      const response = await request(app)
+        .post("/api/articles/1337/comments")
+        .send(validComment)
+        .expect(400);
 
-    expect(response.body.msg).toBe("Row not found");
-  });
+      expect(response.body.msg).toBe("Row not found");
+    });
 
-  test("400: Invalid request, missing username", async () => {
-    const invalidComment = {
-      body: "This is a test comment",
-    };
-    const response = await request(app)
-      .post("/api/articles/1/comments")
-      .send(invalidComment)
-      .expect(400);
+    test("400: Invalid request, missing username", async () => {
+      const invalidComment = {
+        body: "This is a test comment",
+      };
+      const response = await request(app)
+        .post("/api/articles/1/comments")
+        .send(invalidComment)
+        .expect(400);
 
-    expect(response.body.msg).toBe("Invalid request");
+      expect(response.body.msg).toBe("Invalid request");
+    });
   });
 });
-describe("PATCH /api/articles/:articleId", () => {
+describe("PATCH /api/articles/:article_id", () => {
   const validArticleId = 1;
   const validIncrement = 100;
   const invalidArticleId = "invalid";
   const invalidIncrement = "invalid";
 
-  test("200: Should update an article by articleId", async () => {
+  test("200: Should update an article by article_id", async () => {
     const originalResponse = await request(app).get(
       `/api/articles/${validArticleId}`,
     );
@@ -332,49 +339,46 @@ describe("PATCH /api/articles/:articleId", () => {
       votes: originalVotes + validIncrement,
     });
   });
+  describe("Error Handling for PATCH /api/articles/:article_id", () => {
+    test("404: Not found, article_id does not exist", async () => {
+      const response = await request(app)
+        .patch(`/api/articles/1337`)
+        .send({ inc_votes: validIncrement })
+        .expect(404);
+      expect(response.body.msg).toBe("Article not found");
+    });
+    test("400: Bad request, invalid article_id", async () => {
+      const response = await request(app)
+        .patch(`/api/articles/${invalidArticleId}`)
+        .send({ inc_votes: validIncrement })
+        .expect(400);
+      expect(response.body.msg).toBe("Bad request");
+    });
 
-  test("400: Bad request, invalid articleId", async () => {
-    const response = await request(app)
-      .patch(`/api/articles/${invalidArticleId}`)
-      .send({ inc_votes: validIncrement })
-      .expect(400);
-    expect(response.body.msg).toBe("Bad request");
-  });
+    test("400: Invalid request, missing inc_votes", async () => {
+      const response = await request(app)
+        .patch(`/api/articles/${validArticleId}`)
+        .send({})
+        .expect(400);
+      expect(response.body.msg).toBe("Invalid request");
+    });
 
-  test("404: Not found, articleId does not exist", async () => {
-    const response = await request(app)
-      .patch(`/api/articles/999`)
-      .send({ inc_votes: validIncrement })
-      .expect(404);
-    expect(response.body.msg).toBe("Article not found");
-  });
-
-  test("400: Invalid request, missing inc_votes", async () => {
-    const response = await request(app)
-      .patch(`/api/articles/${validArticleId}`)
-      .send({})
-      .expect(400);
-    expect(response.body.msg).toBe("Invalid request");
-  });
-
-  test("400: Bad request, invalid inc_votes", async () => {
-    const response = await request(app)
-      .patch(`/api/articles/${validArticleId}`)
-      .send({ inc_votes: invalidIncrement })
-      .expect(400);
-    expect(response.body.msg).toBe("Bad request");
-  });
-
-  test("500: Internal Server Error", async () => {
-    const mockQuery = jest
-      .spyOn(db, "query")
-      .mockRejectedValueOnce(new Error("Database error"));
-    const response = await request(app)
-      .patch(`/api/articles/${validArticleId}`)
-      .send({ inc_votes: validIncrement })
-      .expect(500);
-    expect(response.body.msg).toBe("Internal Server Error");
-    mockQuery.mockRestore();
+    test("400: Bad request, invalid inc_votes", async () => {
+      const response = await request(app)
+        .patch(`/api/articles/${validArticleId}`)
+        .send({ inc_votes: invalidIncrement })
+        .expect(400);
+      expect(response.body.msg).toBe("Bad request");
+    });
+    
+    test("500: Internal Server Error", async () => {
+      await assertInternalServerError(
+        `/api/articles/${validArticleId}`,
+        "Internal Server Error",
+        "patch",
+        "{ inc_votes: validIncrement }",
+      );
+    });
   });
 });
 
@@ -383,28 +387,28 @@ describe("DELETE /api/comments/:comment_id", () => {
     const response = await request(app).delete("/api/comments/1").expect(204);
     expect(response.body).toEqual({});
   });
+  describe("Error Handling for DELETE /api/comments/:comment_id", () => {
+    test("400: Bad request, invalid comment_id", async () => {
+      const response = await request(app)
+        .delete("/api/comments/invalid")
+        .expect(400);
+      expect(response.body.msg).toBe("Bad request");
+    });
 
-  test("400: Bad request, invalid comment_id", async () => {
-    const response = await request(app)
-      .delete("/api/comments/invalid")
-      .expect(400);
-    expect(response.body.msg).toBe("Bad request");
-  });
+    test("404: Not found, comment_id does not exist", async () => {
+      const response = await request(app)
+        .delete("/api/comments/1337")
+        .expect(404);
+      expect(response.body.msg).toBe("Comment not found");
+    });
 
-  test("404: Not found, comment_id does not exist", async () => {
-    const response = await request(app)
-      .delete("/api/comments/1337")
-      .expect(404);
-    expect(response.body.msg).toBe("Comment not found");
-  });
-
-  test("500: Internal Server Error", async () => {
-    const mockQuery = jest
-      .spyOn(db, "query")
-      .mockRejectedValueOnce(new Error("Database error"));
-    const response = await request(app).delete("/api/comments/1").expect(500);
-    expect(response.body.msg).toBe("Internal Server Error");
-    mockQuery.mockRestore();
+    test("500: Internal Server Error", async () => {
+      await assertInternalServerError(
+        "/api/comments/1",
+        "Internal Server Error",
+        "delete",
+      );
+    });
   });
 });
 
@@ -418,13 +422,13 @@ describe("GET /api/users", () => {
       expect(user).toMatchObject(expectedUsers[index]);
     });
   });
-
-  test("500: Internal Server Error", async () => {
-    const mockQuery = jest
-      .spyOn(db, "query")
-      .mockRejectedValueOnce(new Error("Database error"));
-    const response = await request(app).get("/api/users").expect(500);
-    expect(response.body.msg).toBe("Internal Server Error");
-    mockQuery.mockRestore();
+  describe("Error Handling for GET /api/users", () => {
+    test("500: Internal Server Error", async () => {
+      await assertInternalServerError(
+        "/api/users",
+        "Internal Server Error",
+        "get",
+      );
+    });
   });
 });
