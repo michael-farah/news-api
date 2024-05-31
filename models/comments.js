@@ -6,7 +6,7 @@ exports.fetchComments = async (
   sort_by = "created_at",
   order = "desc",
 ) => {
-  utils.validateSortAndOrder(sort_by, order);
+  utils.validateQueries(sort_by, order);
   const query = `
       SELECT 
         comments.comment_id, 

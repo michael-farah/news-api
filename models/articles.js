@@ -9,9 +9,9 @@ exports.fetchArticle = async (article_id) => {
   return article || Promise.reject({ status: 404, msg: "Article not found" });
 };
 
-exports.fetchArticles = async (sort_by = "created_at", order = "desc") => {
-  utils.validateSortAndOrder(sort_by, order);
-
+exports.fetchArticles = async (sort_by = "created_at", order = "desc", topic = "") => {
+ utils.validateQueries(sort_by, order, topic);
+ 
   const query = `
     SELECT 
       articles.article_id, 
@@ -24,10 +24,11 @@ exports.fetchArticles = async (sort_by = "created_at", order = "desc") => {
       CAST(COUNT(comments.article_id) AS INTEGER) AS comment_count
     FROM articles
     LEFT JOIN comments ON articles.article_id = comments.article_id
+    ${topic ? `WHERE articles.topic = $1` : ''}
     GROUP BY articles.article_id
     ORDER BY ${sort_by} ${order}`;
-
-  const { rows: articles } = await db.query(query);
+  
+  const { rows: articles } = topic? await db.query(query, [topic]): await db.query(query);
   return articles;
 };
 
