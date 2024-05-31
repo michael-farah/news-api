@@ -10,7 +10,8 @@
           "/api/topics": {},
           "/api/articles": {},
           "/api/articles/:article_id": {},
-          "/api/articles/:article_id/comments": {}
+          "/api/articles/:article_id/comments": {},
+          "/api/comments/:comment_id": {}
         }
       }
     },
@@ -127,7 +128,14 @@
           }
         }
       }
-    ]
+    ],
+    "/api/comments/:comment_id": {
+      "method": "DELETE",
+      "description": "Deletes a comment by comment ID. Responds with status 204 and no content.",
+      "queries": [],
+      "requestBody": null,
+      "exampleResponse": null
+    }
   },
   "/api/articles/:article_id": {
     "method": "PATCH",
