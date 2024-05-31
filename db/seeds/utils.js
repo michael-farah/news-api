@@ -21,28 +21,63 @@ exports.formatComments = (comments, idLookup) => {
   });
 };
 
-exports.validateSortAndOrder = (sort_by, order) => {
+exports.validateQueries = (sort_by, order, topic) => {
   const validSortBy = ["created_at", "author", "title", "topic", "votes"];
   const validOrder = ["asc", "desc"];
+  const validTopic = ["cats", "mitch"];
 
-  if (!validSortBy.includes(sort_by) && !validOrder.includes(order)) {
+  const invalidSortByMessage = !validSortBy.includes(sort_by)
+    ? `Invalid sort_by value: ${sort_by}`
+    : "";
+  const invalidOrderMessage = !validOrder.includes(order)
+    ? `Invalid order value: ${order}`
+    : "";
+  const invalidTopicMessage =
+    topic && !validTopic.includes(topic) ? `Invalid topic value: ${topic}` : "";
+
+  const errorMessages = [
+    invalidSortByMessage,
+    invalidOrderMessage,
+    invalidTopicMessage,
+  ].filter(Boolean);
+
+  if (errorMessages.length > 0) {
     const err = new Error();
+    err.msg = errorMessages.join(" and ");
     err.status = 400;
-    err.msg = "Invalid sort_by and order values";
     throw err;
   }
+};
 
-  if (!validSortBy.includes(sort_by)) {
-    const err = new Error();
-    err.status = 400;
-    err.msg = `Invalid sort_by value: ${sort_by}`;
-    throw err;
-  }
+exports.createAssertInternalServerError = (db, app, request) => {
+  return async (requestPath, expectedMsg, method = "get", requestBody = null) => {
+    const mockQuery = jest
+      .spyOn(db, "query")
+      .mockRejectedValueOnce(new Error("Database error"));
 
-  if (!validOrder.includes(order)) {
-    const err = new Error();
-    err.status = 400;
-    err.msg = `Invalid order value: ${order}`;
-    throw err;
-  }
+    let response;
+    switch (method.toLowerCase()) {
+      case "post":
+        response = await request(app)
+          .post(requestPath)
+          .send(requestBody)
+          .expect(500);
+        break;
+      case "patch":
+        response = await request(app)
+          .patch(requestPath)
+          .send(requestBody)
+          .expect(500);
+        break;
+      case "delete":
+        response = await request(app).delete(requestPath).expect(500);
+        break;
+      default:
+        response = await request(app).get(requestPath).expect(500);
+        break;
+    }
+
+    expect(response.body.msg).toEqual(expectedMsg);
+    mockQuery.mockRestore();
+  };
 };

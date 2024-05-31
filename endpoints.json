@@ -31,7 +31,7 @@
     "/api/articles": {
       "method": "GET",
       "description": "Returns an array of all articles, sorted by default in descending order by created_at",
-      "queries": ["sort_by, order"],
+      "queries": ["sort_by, order", "topic"],
       "requestBody": null,
       "exampleResponse": {
         "articles": [
