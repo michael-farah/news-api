@@ -1,19 +1,23 @@
-const { fetchComments, addComment, removeComment } = require("../models/comments");
+const {
+  fetchCommentsByArticleId,
+  addComment,
+  removeCommentById,
+} = require("../models/comments");
 
-exports.getComments = async (req, res, next) => {
-  const { article_id } = req.params;
+exports.getCommentsByArticleId = async (req, res, next) => {
   try {
-    const comments = await fetchComments(article_id);
+    const { article_id } = req.params;
+    const comments = await fetchCommentsByArticleId(article_id);
     res.status(200).send(comments);
   } catch (err) {
     next(err);
   }
 };
 
-exports.postComment = async (req, res, next) => {
-  const { article_id } = req.params;
-  const { username, body } = req.body;
+exports.postCommentByArticleId = async (req, res, next) => {
   try {
+    const { article_id } = req.params;
+    const { username, body } = req.body;
     const comment = await addComment(article_id, username, body);
     res.status(201).send(comment);
   } catch (err) {
@@ -21,12 +25,12 @@ exports.postComment = async (req, res, next) => {
   }
 };
 
-exports.deleteComment = async (req, res, next) => {
-  const { comment_id } = req.params;
+exports.deleteCommentById = async (req, res, next) => {
   try {
-    await removeComment(comment_id);
+    const { comment_id } = req.params;
+    await removeCommentById(comment_id);
     res.sendStatus(204);
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
