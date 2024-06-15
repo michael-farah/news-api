@@ -1,3 +1,5 @@
+const db = require("../connection");
+
 exports.convertTimestampToDate = ({ created_at, ...otherProperties }) => {
   if (!created_at) return { ...otherProperties };
   return { created_at: new Date(created_at), ...otherProperties };
@@ -21,63 +23,104 @@ exports.formatComments = (comments, idLookup) => {
   });
 };
 
-exports.validateQueries = (sort_by, order, topic) => {
-  const validSortBy = ["created_at", "author", "title", "topic", "votes"];
-  const validOrder = ["asc", "desc"];
-  const validTopic = ["cats", "mitch"];
+const getValidTopics = async () => {
+  const query = "SELECT slug FROM topics";
+  const { rows } = await db.query(query);
+  return rows.map((row) => row.slug);
+};
 
-  const invalidSortByMessage = !validSortBy.includes(sort_by)
-    ? `Invalid sort_by value: ${sort_by}`
-    : "";
-  const invalidOrderMessage = !validOrder.includes(order)
-    ? `Invalid order value: ${order}`
-    : "";
-  const invalidTopicMessage =
-    topic && !validTopic.includes(topic) ? `Invalid topic value: ${topic}` : "";
+exports.validateQueries = async (sort_by, order, topic) => {
+  const validSortBy = [
+    "created_at",
+    "author",
+    "title",
+    "topic",
+    "votes",
+    "comment_count",
+  ];
+  const validOrder = ["asc", "desc"];
+  const validTopics = await getValidTopics();
 
   const errorMessages = [
-    invalidSortByMessage,
-    invalidOrderMessage,
-    invalidTopicMessage,
+    !validSortBy.includes(sort_by) && `Invalid sort_by value: ${sort_by}`,
+    !validOrder.includes(order) && `Invalid order value: ${order}`,
+    topic && !validTopics.includes(topic) && `Invalid topic value: ${topic}`,
   ].filter(Boolean);
 
   if (errorMessages.length > 0) {
-    const err = new Error();
-    err.msg = errorMessages.join(" and ");
-    err.status = 400;
-    throw err;
+    return Promise.reject({ status: 400, msg: errorMessages.join(" and ") });
   }
 };
 
-exports.createAssertInternalServerError = (db, app, request) => {
-  return async (requestPath, expectedMsg, method = "get", requestBody = null) => {
-    const mockQuery = jest
-      .spyOn(db, "query")
-      .mockRejectedValueOnce(new Error("Database error"));
+exports.assertInternalServerError = async (
+  path,
+  expectedMsg,
+  method = "get",
+  body,
+) => {
+  const app = require("../../app");
+  const request = require("supertest");
+  const db = require("../connection");
 
-    let response;
-    switch (method.toLowerCase()) {
-      case "post":
-        response = await request(app)
-          .post(requestPath)
-          .send(requestBody)
-          .expect(500);
-        break;
-      case "patch":
-        response = await request(app)
-          .patch(requestPath)
-          .send(requestBody)
-          .expect(500);
-        break;
-      case "delete":
-        response = await request(app).delete(requestPath).expect(500);
-        break;
-      default:
-        response = await request(app).get(requestPath).expect(500);
-        break;
-    }
+  const mockQuery = jest
+    .spyOn(db, "query")
+    .mockRejectedValueOnce(new Error("Database error"));
 
-    expect(response.body.msg).toEqual(expectedMsg);
-    mockQuery.mockRestore();
+  let response;
+  switch (method.toLowerCase()) {
+    case "post":
+      response = await request(app).post(path).send(body).expect(500);
+      break;
+    case "patch":
+      response = await request(app).patch(path).send(body).expect(500);
+      break;
+    case "delete":
+      response = await request(app).delete(path).expect(500);
+      break;
+    default:
+      response = await request(app).get(path).expect(500);
+      break;
+  }
+
+  expect(response.status).toBe(500);
+  expect(response.body.msg).toEqual(expectedMsg);
+  mockQuery.mockRestore();
+};
+
+exports.expectedArticle = async (article_id) => {
+  const app = require("../../app");
+  const request = require("supertest");
+
+  const { body: articles } = await request(app)
+    .get("/api/articles")
+    .expect(200);
+  const articleData = articles.find(
+    (article) => article.article_id === article_id,
+  );
+  const { created_at } = articleData;
+
+  const commentCount = await getCommentCount(article_id);
+
+  return {
+    article_id,
+    author: articleData.author,
+    body: expect.any(String),
+    title: articleData.title,
+    topic: articleData.topic,
+    created_at,
+    votes: articleData.votes,
+    article_img_url: articleData.article_img_url,
+    comment_count: commentCount,
   };
+};
+
+const getCommentCount = async (article_id) => {
+  const queryStr = `
+    SELECT COUNT(*) AS comment_count
+    FROM comments
+    WHERE article_id = $1;
+  `;
+
+  const { rows } = await db.query(queryStr, [article_id]);
+  return rows[0].comment_count;
 };
