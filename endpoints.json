@@ -70,7 +70,7 @@
     },
     "/api/articles/:article_id": {
       "method": "GET",
-      "description": "Returns an article object by its id",
+      "description": "Returns an article object by its ID",
       "queries": [],
       "requestBody": null,
       "exampleResponse": {

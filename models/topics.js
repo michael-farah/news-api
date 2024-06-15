@@ -1,10 +1,10 @@
 const db = require("../db/connection");
 
-async function fetchTopics() {
-  const results = await db.query(`SELECT * FROM topics;`);
-  return results.rows;
-}
+exports.fetchTopics = async () => {
+  const queryStr = `
+    SELECT * FROM topics;
+  `;
 
-module.exports = {
-  fetchTopics
-}
+  const { rows } = await db.query(queryStr);
+  return rows;
+};
